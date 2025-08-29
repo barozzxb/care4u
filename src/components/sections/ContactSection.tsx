@@ -2,7 +2,7 @@ const ContactSection = () => {
     return (
         <section className="w-full flex flex-col items-center justify-center py-16">
             <h2 className="text-4xl font-bold text-gray-900 mb-8">Contact Us</h2>
-            <p className="text-lg text-gray-700 mb-4">We'd love to hear from you!</p>
+            <p className="text-lg text-gray-700 mb-4">We would love to hear from you!</p>
             <form className="container flex flex-col items-center">
                 <div className="w-auto md:w-2xl mb-4">
                     <label htmlFor="name" className="block text-sm font-medium text-gray-700">Name</label>
