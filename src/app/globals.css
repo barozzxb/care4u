@@ -1,12 +1,10 @@
-@import url('https://fonts.googleapis.com/css2?family=Dosis:wght@200..800&family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&family=Nunito:ital,wght@0,200..1000;1,200..1000&display=swap');
-
 @import "tailwindcss";
 
 :root {
   --background: #ffffff;
   --foreground: #171717;
 
-  --primary-font: "Dosis", sans-serif;
+  --primary-font: "Quicksand", sans-serif;
 
   --primary-color: #4f46e5;
   --secondary-color: #815d00;
@@ -35,4 +33,9 @@ body {
   background: var(--background);
   color: var(--foreground);
   font-family: var(--primary-font);
+}
+
+.emphasis{
+  font-weight: bold;
+  color: var(--primary-color);
 }

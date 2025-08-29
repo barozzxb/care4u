@@ -1,18 +1,15 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Quicksand } from "next/font/google";
 import "./globals.css";
 
 import NavBar from "../components/NavBar";
+import Footer from "@/components/Footer";
 
-// const geistSans = Geist({
-//   variable: "--font-geist-sans",
-//   subsets: ["latin"],
-// });
-
-// const geistMono = Geist_Mono({
-//   variable: "--font-geist-mono",
-//   subsets: ["latin"],
-// });
+const quicksand = Quicksand({
+  variable: "--font-quicksand",
+  subsets: ["latin"],
+  weight: ["400", "700"],
+});
 
 export const metadata: Metadata = {
   title: "Care4U - Sức khỏe và đặt lịch",
@@ -26,12 +23,14 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body
-        // className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-        className="h-screen w-full"
-      >
-        <NavBar />
-        {children}
+      <body className={`h-screen w-full ${quicksand.variable} antialiased`}>
+
+        <header className="fixed top-0 left-0 w-full z-50">
+          <NavBar />
+        </header>
+        <main className="">{children}</main>
+        <Footer />
+
       </body>
     </html>
   );
