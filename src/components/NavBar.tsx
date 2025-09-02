@@ -1,4 +1,5 @@
 import Image from "next/image";
+import Link from "next/link";
 
 const NavBar = () => {
     return (
@@ -8,10 +9,10 @@ const NavBar = () => {
             </div>
             <div className="flex flex-1 justify-center">
                 <div className="flex gap-8 space-x-4">
-                    <a href="/" className="font-bold hover:text-amber-900 transition-all duration-500">Trang chủ</a>
-                    <a href="/aboutus" className="font-bold hover:text-amber-900 transition-all duration-500">Giới thiệu</a>
-                    <a href="/services" className="font-bold hover:text-amber-900 transition-all duration-500">Dịch vụ</a>
-                    <a href="/contact" className="font-bold hover:text-amber-900 transition-all duration-500">Liên hệ</a>
+                    <Link href="/" className="font-bold hover:text-amber-900 transition-all duration-500">Trang chủ</Link>
+                    <Link href="/aboutus" className="font-bold hover:text-amber-900 transition-all duration-500">Giới thiệu</Link>
+                    <Link href="/services" className="font-bold hover:text-amber-900 transition-all duration-500">Dịch vụ</Link>
+                    <Link href="/contact" className="font-bold hover:text-amber-900 transition-all duration-500">Liên hệ</Link>
                 </div>
             </div>
             <div className="flex justify-end w-40">

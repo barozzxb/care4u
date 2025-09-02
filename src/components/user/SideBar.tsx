@@ -1,10 +1,11 @@
 import Link from "next/link";
+import Image from "next/image";
 
 const SideBar = () => {
   return (
     <div className="h-full p-0 bg-gradient-to-b from-blue-50 via-white to-amber-50 border-r border-gray-200 shadow-2xl flex flex-col items-center">
       <div className="flex flex-col items-center py-8 w-full bg-gradient-to-r from-blue-200 to-amber-100 rounded-b-3xl shadow-lg mb-6">
-        <img src="/CARE4U.png" alt="Care4U Logo" className="w-32 h-32 rounded-full border-4 border-white shadow-md mb-2" />
+        <Image src="/CARE4U.png" alt="Care4U Logo" className="w-32 h-32 rounded-full border-4 border-white shadow-md mb-2" />
         <span className="text-xl font-extrabold text-blue-950 tracking-wide drop-shadow">User Name</span>
         <span className="text-xl text-blue-950 tracking-wide drop-shadow">Age: 30</span>
       </div>
