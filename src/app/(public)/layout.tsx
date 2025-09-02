@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
 import { Quicksand } from "next/font/google";
-import "./globals.css";
+import "../globals.css";
 
-import NavBar from "../components/NavBar";
+import NavBar from "@/components/NavBar";
 import Footer from "@/components/Footer";
 
 const quicksand = Quicksand({
@@ -25,7 +25,7 @@ export default function RootLayout({
     <html lang="en">
       <body className={`h-screen w-full ${quicksand.variable} antialiased`}>
 
-        <header className="fixed top-0 left-0 w-full z-50">
+        <header className="relative top-0 left-0 w-full z-50">
           <NavBar />
         </header>
         <main className="">{children}</main>
