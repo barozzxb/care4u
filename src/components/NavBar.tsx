@@ -8,14 +8,14 @@ const NavBar = () => {
             </div>
             <div className="flex flex-1 justify-center">
                 <div className="flex gap-8 space-x-4">
-                    <a href="#" className="font-bold hover:text-amber-900 transition-all duration-500">Home</a>
-                    <a href="#" className="font-bold hover:text-amber-900 transition-all duration-500">About</a>
-                    <a href="#" className="font-bold hover:text-amber-900 transition-all duration-500">Services</a>
-                    <a href="#" className="font-bold hover:text-amber-900 transition-all duration-500">Contact</a>
+                    <a href="/" className="font-bold hover:text-amber-900 transition-all duration-500">Trang chủ</a>
+                    <a href="/aboutus" className="font-bold hover:text-amber-900 transition-all duration-500">Giới thiệu</a>
+                    <a href="/services" className="font-bold hover:text-amber-900 transition-all duration-500">Dịch vụ</a>
+                    <a href="/contact" className="font-bold hover:text-amber-900 transition-all duration-500">Liên hệ</a>
                 </div>
             </div>
             <div className="flex justify-end w-40">
-                <a href="/login" className="font-bold hover:text-amber-800 transition-all duration-500">Login</a>
+                <a href="/login" className="font-bold hover:text-amber-800 transition-all duration-500">Đăng nhập</a>
             </div>
         </nav>
     );
