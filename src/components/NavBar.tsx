@@ -1,7 +1,32 @@
+"use client";
+
+import { jwtDecode } from "jwt-decode";
 import Image from "next/image";
 import Link from "next/link";
+import { useEffect, useState } from "react";
 
 const NavBar = () => {
+    const [email, setEmail] = useState<string | null>(null);
+
+    useEffect(() => {
+        const token = localStorage.getItem('token');
+        if (token) {
+            const decodedToken: any = jwtDecode(token);
+            const currentTime = Date.now() / 1000; // Convert to seconds
+            if (typeof decodedToken.exp === "number" && decodedToken.exp < currentTime) {
+                localStorage.removeItem('token');
+                window.location.href = '/login';
+            } else {
+                setEmail(decodedToken.sub);
+            }
+        }
+    }, []);
+
+    const handleLogout = () => {
+        localStorage.removeItem('token');
+        window.location.href = '/login';
+    };
+
     return (
         <nav className="absolute top-0 flex items-center p-4 bg-transparent text-gray-950 w-full z-index-100">
             <div className="flex justify-start">
@@ -16,7 +41,19 @@ const NavBar = () => {
                 </div>
             </div>
             <div className="flex justify-end w-40">
-                <a href="/login" className="font-bold hover:text-amber-800 transition-all duration-500">Đăng nhập</a>
+                {email ? (
+                    <div className="flex items-center gap-3">
+                        <span className="font-bold text-blue-700">{email}</span>
+                        <button
+                            onClick={handleLogout}
+                            className="px-3 py-1 bg-amber-400 text-white rounded-lg font-semibold hover:bg-amber-600 transition-all duration-300"
+                        >
+                            Đăng xuất
+                        </button>
+                    </div>
+                ) : (
+                    <a href="/login" className="font-bold hover:text-amber-800 transition-all duration-500">Đăng nhập</a>
+                )}
             </div>
         </nav>
     );

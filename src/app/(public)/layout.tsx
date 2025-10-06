@@ -4,6 +4,7 @@ import "../globals.css";
 
 import NavBar from "@/components/NavBar";
 import Footer from "@/components/Footer";
+import ToastProvider from "@/components/ToastProvider";
 
 const quicksand = Quicksand({
   variable: "--font-quicksand",
@@ -24,6 +25,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`h-screen w-full ${quicksand.variable} antialiased`}>
+        <ToastProvider />
 
         <header className="relative top-0 left-0 w-full z-50">
           <NavBar />
