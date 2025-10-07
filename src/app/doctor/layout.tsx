@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { Quicksand } from "next/font/google";
 import "../globals.css";
-import "./user.css"
+import "./doctor.css"
 
 import SideBar from "@/components/user/SideBar";
 import Footer from "@/components/Footer";
