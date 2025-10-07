@@ -1,10 +1,14 @@
 "use client";
 
-import { toast } from "react-toastify";
+export const dynamic = "force-dynamic"; // ⬅️ Tắt prerender
+
+import { useEffect } from "react";
+import { logout } from "@/features/auth/authService";
+
 export default function LogoutPage() {
-    localStorage.removeItem("token");
-    localStorage.removeItem("role");
-    toast.success("Đăng xuất thành công");
-    window.location.href = "/login";
-    return null;
-};
+  useEffect(() => {
+    logout();
+  }, []);
+
+  return <p>Đang đăng xuất...</p>;
+}
