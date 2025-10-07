@@ -4,9 +4,15 @@ import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 
+interface UserDetail {
+    firstname: string;
+    lastname: string;
+    avatar: string;
+}
+
 const NavBar = () => {
     const [email, setEmail] = useState<string | null>(null);
-    const [userDetail, setUserDetail] = useState<any>(null);
+    const [userDetail, setUserDetail] = useState<UserDetail | null>(null);
 
     useEffect(() => {
         setEmail(localStorage.getItem('email'));

@@ -1,15 +1,20 @@
 "use client";
 
-import { jwtDecode } from "jwt-decode";
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 
 import { logout } from "@/features/auth/authService";
 
+interface UserDetail {
+    firstname: string;
+    lastname: string;
+    avatar: string;
+}
+
 const NavBar = () => {
     const [email, setEmail] = useState<string | null>(null);
-    const [userDetail, setUserDetail] = useState<any>(null);
+    const [userDetail, setUserDetail] = useState<UserDetail | null>(null);
     const [dropdownOpen, setDropdownOpen] = useState(false);
 
     useEffect(() => {
