@@ -43,7 +43,7 @@ const NavBar = () => {
             <div className="flex justify-end w-40">
                 {email ? (
                     <div className="flex items-center gap-3">
-                        <span className="font-bold text-blue-700">{email}</span>
+                        <span className="font-bold text-blue-700">{userDetail?.firstname ? userDetail.firstname : email.substring(0, email.indexOf('@'))}</span>
                         <button
                             onClick={handleLogout}
                             className="px-3 py-1 bg-amber-400 text-white rounded-lg font-semibold hover:bg-amber-600 transition-all duration-300"

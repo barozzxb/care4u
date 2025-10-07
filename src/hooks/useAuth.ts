@@ -1,7 +1,5 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { toast } from "react-toastify";
-
 
 export function useAuth(protectedRole?: string) {
     const [loading, setLoading] = useState(true);
