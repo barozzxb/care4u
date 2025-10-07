@@ -1,30 +1,24 @@
 "use client";
-
-import { jwtDecode } from "jwt-decode";
+import { logout } from "@/features/auth/authService";
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 
 const NavBar = () => {
     const [email, setEmail] = useState<string | null>(null);
+    const [userDetail, setUserDetail] = useState<any>(null);
 
     useEffect(() => {
-        const token = localStorage.getItem('token');
-        if (token) {
-            const decodedToken: any = jwtDecode(token);
-            const currentTime = Date.now() / 1000; // Convert to seconds
-            if (typeof decodedToken.exp === "number" && decodedToken.exp < currentTime) {
-                localStorage.removeItem('token');
-                window.location.href = '/login';
-            } else {
-                setEmail(decodedToken.sub);
-            }
+        setEmail(localStorage.getItem('email'));
+        const user = localStorage.getItem('user');
+        if (user) {
+            const userObj = JSON.parse(user);
+            setUserDetail(userObj);
         }
     }, []);
 
-    const handleLogout = () => {
-        localStorage.removeItem('token');
-        window.location.href = '/login';
+    const handleLogout = async () => {
+        await logout();
     };
 
     return (

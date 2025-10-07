@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import {toast} from "react-toastify"
+import { toast } from "react-toastify"
 
 import { Eye, EyeOff } from "lucide-react";
 import { useRouter } from "next/navigation";
@@ -22,29 +22,29 @@ const Login = () => {
         e.preventDefault();
         setLoading(true);
         try {
-            const {message,body} = await login(email, password);
+            const { message, body } = await login(email, password);
             toast.success(message || "Đăng nhập thành công!");
             const role = body.role;
             switch (role) {
-            case "PATIENT":
-                router.push("/patient");
-                break;
-            case "DOCTOR":
-                router.push("/doctor");
-                break;
-            case "ADMIN":
-                router.push("/admin");
-                break;
-            case "STAFF":
-                router.push("/staff");
-                break;
-            default:
-                router.push("/");
-                break;
-        }
-        } catch (error: any) {
+                case "PATIENT":
+                    router.push("/patient");
+                    break;
+                case "DOCTOR":
+                    router.push("/doctor");
+                    break;
+                case "ADMIN":
+                    router.push("/admin");
+                    break;
+                case "STAFF":
+                    router.push("/staff");
+                    break;
+                default:
+                    router.push("/");
+                    break;
+            }
+        } catch (error) {
             console.error("Login error:", error);
-            toast.error(error.response?.data?.message || "Đăng nhập thất bại. Vui lòng thử lại.");
+            toast.error("Đăng nhập thất bại. Vui lòng thử lại.");
         }
         finally {
             setLoading(false);

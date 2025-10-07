@@ -17,7 +17,7 @@ export const login = async (email: string, password: string) => {
 export const logout = async () => {
     const token = localStorage.getItem("token");
     if (!token) return;
-    const decodedToken: any = jwtDecode(token);
+    const decodedToken = jwtDecode<{ sub: string }>(token);
     const email = decodedToken.sub;
     localStorage.removeItem("token");
     localStorage.removeItem("refreshToken");
