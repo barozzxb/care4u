@@ -3,7 +3,7 @@
 export const dynamic = "force-dynamic"; // ⬅️ Tắt prerender
 
 import { useEffect } from "react";
-import { logout } from "@/features/auth/authService";
+import { logout } from "@/services/authService";
 
 export default function LogoutPage() {
   useEffect(() => {

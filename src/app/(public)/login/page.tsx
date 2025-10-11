@@ -4,9 +4,9 @@ import { useState } from "react";
 import { toast } from "react-toastify"
 
 import { Eye, EyeOff } from "lucide-react";
-import { useRouter } from "next/navigation";
 
-import { login } from "@/features/auth/authService";
+import { login } from "@/services/authService";
+import { useRedirect } from "@/hooks/useRedirect";
 
 const Login = () => {
 
@@ -16,32 +16,21 @@ const Login = () => {
 
     const [loading, setLoading] = useState(false);
 
-    const router = useRouter();
+    const { redirectByRole } = useRedirect();
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         setLoading(true);
         try {
-            const { message, body } = await login(email, password);
+            const {status, message, body } = await login(email, password);
+            if (status !== 200) {
+                toast.error(message);
+                setLoading(false);
+                return;
+            }
             toast.success(message || "Đăng nhập thành công!");
             const role = body.role;
-            switch (role) {
-                case "PATIENT":
-                    router.push("/patient");
-                    break;
-                case "DOCTOR":
-                    router.push("/doctor");
-                    break;
-                case "ADMIN":
-                    router.push("/admin");
-                    break;
-                case "STAFF":
-                    router.push("/staff");
-                    break;
-                default:
-                    router.push("/");
-                    break;
-            }
+            redirectByRole(role);
         } catch (error) {
             console.error("Login error:", error);
             toast.error("Đăng nhập thất bại. Vui lòng thử lại.");
