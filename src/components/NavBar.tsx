@@ -1,8 +1,11 @@
 "use client";
-import { logout } from "@/features/auth/authService";
+import { logout } from "@/services/authService";
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState } from "react";
+
+import { useRedirect } from "@/hooks/useRedirect";
+import { toast } from "react-toastify";
 
 interface UserDetail {
     firstname: string;
@@ -24,7 +27,19 @@ const NavBar = () => {
     }, []);
 
     const handleLogout = async () => {
-        await logout();
+        const message  = await logout();
+        if (message) {
+            toast.success(message.toString());
+        }
+    };
+
+    const { redirectByRole } = useRedirect();
+
+    const handleRoleRedirect = () => {
+        const role = localStorage.getItem("role");
+        if (role) {
+            redirectByRole(role);
+        }
     };
 
     return (
@@ -43,7 +58,7 @@ const NavBar = () => {
             <div className="flex justify-end w-40">
                 {email ? (
                     <div className="flex items-center gap-3">
-                        <span className="font-bold text-blue-700">{userDetail?.firstname ? userDetail.firstname : email.substring(0, email.indexOf('@'))}</span>
+                        <button onClick={handleRoleRedirect} className="font-bold text-blue-700">{userDetail?.firstname ? userDetail.firstname : email.substring(0, email.indexOf('@'))}</button>
                         <button
                             onClick={handleLogout}
                             className="px-3 py-1 bg-amber-400 text-white rounded-lg font-semibold hover:bg-amber-600 transition-all duration-300"

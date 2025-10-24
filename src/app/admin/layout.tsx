@@ -1,11 +1,11 @@
 import type { Metadata } from "next";
 import { Quicksand } from "next/font/google";
 import "../globals.css";
-import "./patient.css"
+import "./admin.css"
 
-import SideBar from "@/components/user/SideBar";
+import SideBar from "@/components/admin/SideBar";
 import Footer from "@/components/Footer";
-import NavBar from "@/components/user/NavBar";
+import NavBar from "@/components/admin/NavBar";
 
 const quicksand = Quicksand({
     variable: "--font-quicksand",
@@ -14,7 +14,7 @@ const quicksand = Quicksand({
 });
 
 export const metadata: Metadata = {
-    title: "Care4U - Trang chủ người dùng",
+    title: "Care4U - Admin dashboard",
     description: "Nền tảng chăm sóc sức khỏe và đặt lịch hẹn",
 };
 
