@@ -35,5 +35,6 @@ export const logout = async () => {
 export const register = async (email: string, password: string, role: string) => {
     const res = await apiClient.post("/auth/register", { email, password, role });
     const { message, body } = res.data;
+    localStorage.setItem("registeredEmail", email);
     return { message, body };
 }

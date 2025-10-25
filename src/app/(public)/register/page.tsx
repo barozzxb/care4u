@@ -31,14 +31,15 @@ const Register = () => {
         }
         try {
             const { message } = await register(email, password, role);
-                toast.success(message);
+            toast.success(message);
+            window.location.href = '/otp';
         } catch (error) {
             console.error("Registration error:", error);
             toast.error("Đăng ký thất bại. Vui lòng thử lại.");
         } finally {
             setLoading(false);
         }
-        
+
     };
     return (
         <div className="flex flex-col items-center justify-center min-h-screen">
