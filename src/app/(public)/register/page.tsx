@@ -8,6 +8,8 @@ import { register } from "@/services/authService";
 
 import { toast } from "react-toastify";
 
+import { isBlank } from "@/utils/functions";
+
 const Register = () => {
 
     const [loading, setLoading] = useState(false);
@@ -15,7 +17,7 @@ const Register = () => {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [confirmPassword, setConfirmPassword] = useState("");
-    const [role, setRole] = useState("");
+    const [role, setRole] = useState("PATIENT");
 
     const [showPassword, setShowPassword] = useState(false);
 
@@ -24,13 +26,30 @@ const Register = () => {
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         setLoading(true);
+        if (isBlank(email) || isBlank(password) || isBlank(confirmPassword) || isBlank(role)) {
+            toast.error("Vui lòng điền tất cả các trường!")
+            setLoading(false);
+            return;
+        }
+
+        if (password.length < 8){
+            toast.error("Mật khẩu phải có ít nhất 8 kí tự!")
+            setLoading(false);
+            return;
+        }
+
         if (password !== confirmPassword) {
             setAlertMessage("Mật khẩu và xác nhận mật khẩu không khớp!");
             setLoading(false);
             return;
         }
         try {
-            const { message } = await register(email, password, role);
+            const {status, message } = await register(email, password, role);
+            if (status !== 200) {
+                toast.error(message);
+                setLoading(false);
+                return;
+            }
             toast.success(message);
             window.location.href = '/otp';
         } catch (error) {
@@ -49,11 +68,11 @@ const Register = () => {
                 {alertMessage ? <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4" role="alert">{alertMessage}</div> : null}
                 <form className="flex flex-col gap-6 items-center w-full max-w-md mx-auto" onSubmit={handleSubmit}>
                     <div className="relative w-full">
-                        <input type="email" id="email" name="email" required
+                        <input type="email" id="email" name="email"
                             onChange={(e) => setEmail(e.target.value)}
                             placeholder=" "
                             className="peer border-2 border-gray-300 rounded-lg w-full px-4 pt-6 pb-2 text-gray-900 focus:outline-none focus:border-blue-500 transition-all" />
-                        <label htmlFor="email" className="absolute left-3 top-2 text-gray-500 text-sm transition-all peer-focus:-top-3 peer-focus:text-xs peer-focus:text-blue-600 peer-not-placeholder-shown:-top-3 peer-not-placeholder-shown:text-xs bg-white px-1 pointer-events-none">Email</label>
+                        <label htmlFor="email" className="absolute left-3 top-2 text-gray-500 text-sm transition-all peer-focus:-top-3 peer-focus:text-xs peer-focus:text-blue-600 peer-not-placeholder-shown:-top-3 peer-not-placeholder-shown:text-xs bg-white px-1 pointer-events-none">Email <span className="text-red-600">*</span></label>
                     </div>
                     {/* <div className="relative w-full">
                         <input type="text" id="phone" name="phone" required
@@ -62,7 +81,7 @@ const Register = () => {
                         <label htmlFor="phone" className="absolute left-3 top-2 text-gray-500 text-sm transition-all peer-focus:-top-3 peer-focus:text-xs peer-focus:text-blue-600 peer-not-placeholder-shown:-top-3 peer-not-placeholder-shown:text-xs bg-white px-1 pointer-events-none">Số điện thoại</label>
                     </div> */}
                     <div className="relative w-full">
-                        <input type={showPassword ? "text" : "password"} id="password" name="password" required
+                        <input type={showPassword ? "text" : "password"} id="password" name="password"
                             onChange={(e) => setPassword(e.target.value)}
                             className="peer border-2 border-gray-300 rounded-lg w-full px-4 pt-6 pb-2 text-gray-900 focus:outline-none focus:border-blue-500 transition-all" />
                         <div className="absolute right-3 top-5">
@@ -72,10 +91,10 @@ const Register = () => {
                                 <Eye className="h-5 w-5 text-gray-500 cursor-pointer" onClick={() => setShowPassword(false)} />
                             )}
                         </div>
-                        <label htmlFor="password" className="absolute left-3 top-2 text-gray-500 text-sm transition-all peer-focus:-top-3 peer-focus:text-xs peer-focus:text-blue-600 peer-valid:-top-3 peer-valid:text-xs bg-white px-1 pointer-events-none">Mật khẩu</label>
+                        <label htmlFor="password" className="absolute left-3 top-2 text-gray-500 text-sm transition-all peer-focus:-top-3 peer-focus:text-xs peer-focus:text-blue-600 peer-valid:-top-3 peer-valid:text-xs bg-white px-1 pointer-events-none">Mật khẩu <span className="text-red-600">*</span></label>
                     </div>
                     <div className="relative w-full">
-                        <input type={showPassword ? "text" : "password"} id="confirm-password" name="confirm-password" required
+                        <input type={showPassword ? "text" : "password"} id="confirm-password" name="confirm-password"
                             onChange={(e) => setConfirmPassword(e.target.value)}
                             className="peer border-2 border-gray-300 rounded-lg w-full px-4 pt-6 pb-2 text-gray-900 focus:outline-none focus:border-blue-500 transition-all" />
                         <div className="absolute right-3 top-5">
@@ -85,29 +104,29 @@ const Register = () => {
                                 <Eye className="h-5 w-5 text-gray-500 cursor-pointer" onClick={() => setShowPassword(false)} />
                             )}
                         </div>
-                        <label htmlFor="confirm-password" className="absolute left-3 top-2 text-gray-500 text-sm transition-all peer-focus:-top-3 peer-focus:text-xs peer-focus:text-blue-600 peer-valid:-top-3 peer-valid:text-xs bg-white px-1 pointer-events-none">Xác nhận mật khẩu</label>
+                        <label htmlFor="confirm-password" className="absolute left-3 top-2 text-gray-500 text-sm transition-all peer-focus:-top-3 peer-focus:text-xs peer-focus:text-blue-600 peer-valid:-top-3 peer-valid:text-xs bg-white px-1 pointer-events-none">Xác nhận mật khẩu <span className="text-red-600">*</span></label>
                     </div>
                     <div className="w-full flex flex-wrap gap-6 items-center justify-start mt-2 mb-2">
                         <div className="flex items-center gap-2">
-                            <input type="radio" id="PATIENT" name="role" required
+                            <input type="radio" id="PATIENT" name="role" defaultChecked
                                 className=""
                                 value={"PATIENT"} onChange={(e) => setRole(e.target.value)} />
                             <label htmlFor="PATIENT" className="text-gray-500 text-sm">Bệnh nhân</label>
                         </div>
                         <div className="flex items-center gap-2">
-                            <input type="radio" id="DOCTOR" name="role" required
+                            <input type="radio" id="DOCTOR" name="role"
                                 className=""
                                 value={"DOCTOR"} onChange={(e) => setRole(e.target.value)} />
                             <label htmlFor="DOCTOR" className="text-gray-500 text-sm">Bác sĩ</label>
                         </div>
                         <div className="flex items-center gap-2">
-                            <input type="radio" id="STAFF" name="role" required
+                            <input type="radio" id="STAFF" name="role"
                                 className=""
                                 value={"STAFF"} onChange={(e) => setRole(e.target.value)} />
                             <label htmlFor="STAFF" className="text-gray-500 text-sm">Nhân viên</label>
                         </div>
                         <div className="flex items-center gap-2">
-                            <input type="radio" id="ADMIN" name="role" required
+                            <input type="radio" id="ADMIN" name="role"
                                 className=""
                                 value={"ADMIN"} onChange={(e) => setRole(e.target.value)} />
                             <label htmlFor="ADMIN" className="text-gray-500 text-sm">Quản trị viên</label>

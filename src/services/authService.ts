@@ -8,7 +8,7 @@ export const login = async (email: string, password: string) => {
         if (body.token && body.refreshToken) {
             localStorage.setItem("token", body.token);
             localStorage.setItem("refreshToken", body.refreshToken);
-            localStorage.setItem("userDetail", body.user);
+            localStorage.setItem("userDetail", JSON.stringify(body.user));
             localStorage.setItem("role", body.role);
             localStorage.setItem("email", email);
         }
@@ -34,7 +34,7 @@ export const logout = async () => {
 
 export const register = async (email: string, password: string, role: string) => {
     const res = await apiClient.post("/auth/register", { email, password, role });
-    const { message, body } = res.data;
+    const { status, message, body } = res.data;
     localStorage.setItem("registeredEmail", email);
-    return { message, body };
+    return {status, message, body };
 }
