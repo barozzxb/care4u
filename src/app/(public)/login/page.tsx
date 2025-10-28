@@ -5,6 +5,7 @@ import { toast } from "react-toastify"
 
 import { Eye, EyeOff } from "lucide-react";
 
+import { isBlank } from "@/utils/functions";
 import { login } from "@/services/authService";
 import { useRedirect } from "@/hooks/useRedirect";
 
@@ -21,6 +22,12 @@ const Login = () => {
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         setLoading(true);
+        if (isBlank(email) || isBlank(password))
+        {
+            toast.error("Vui lòng điền tất cả các trường!")
+            setLoading(false);
+            return;
+        }
         try {
             const {status, message, body } = await login(email, password);
             if (status !== 200) {
@@ -47,14 +54,14 @@ const Login = () => {
                 <p className="text-center text-gray-600 mb-6">Chào mừng bạn trở lại! Vui lòng đăng nhập để tiếp tục trải nghiệm dịch vụ.</p>
                 <form className="flex flex-col gap-6 items-center w-full max-w-md mx-auto" onSubmit={handleSubmit}>
                     <div className="relative w-full">
-                        <input type="email" id="email" name="email" required
+                        <input type="email" id="email" name="email"
                             value={email} onChange={(e) => setEmail(e.target.value)}
                             placeholder=" "
                             className="peer border-2 border-gray-300 rounded-lg w-full px-4 pt-6 pb-2 text-gray-900 focus:outline-none focus:border-blue-500 transition-all" />
-                        <label htmlFor="email" className="absolute left-3 top-2 text-gray-500 text-sm transition-all peer-focus:-top-3 peer-focus:text-xs peer-focus:text-blue-600 peer-not-placeholder-shown:-top-3 peer-not-placeholder-shown:text-xs bg-white px-1 pointer-events-none">Email</label>
+                        <label htmlFor="email" className="absolute left-3 top-2 text-gray-500 text-sm transition-all peer-focus:-top-3 peer-focus:text-xs peer-focus:text-blue-600 peer-not-placeholder-shown:-top-3 peer-not-placeholder-shown:text-xs bg-white px-1 pointer-events-none">Email <span className="text-red-600">*</span></label>
                     </div>
                     <div className="relative w-full">
-                        <input type={showPassword ? "text" : "password"} id="password" name="password" required
+                        <input type={showPassword ? "text" : "password"} id="password" name="password" 
                             value={password} onChange={(e) => setPassword(e.target.value)}
                             className="peer border-2 border-gray-300 rounded-lg w-full px-4 pt-6 pb-2 text-gray-900 focus:outline-none focus:border-blue-500 transition-all" />
                         <div className="absolute right-3 top-5">
@@ -64,7 +71,7 @@ const Login = () => {
                                 <Eye className="h-5 w-5 text-gray-500 cursor-pointer" onClick={() => setShowPassword(false)} />
                             )}
                         </div>
-                        <label htmlFor="password" className="absolute left-3 top-2 text-gray-500 text-sm transition-all peer-focus:-top-3 peer-focus:text-xs peer-focus:text-blue-600 peer-valid:-top-3 peer-valid:text-xs bg-white px-1 pointer-events-none">Mật khẩu</label>
+                        <label htmlFor="password" className="absolute left-3 top-2 text-gray-500 text-sm transition-all peer-focus:-top-3 peer-focus:text-xs peer-focus:text-blue-600 peer-valid:-top-3 peer-valid:text-xs bg-white px-1 pointer-events-none">Mật khẩu <span className="text-red-600">*</span></label>
                     </div>
                     <button type="submit" className="w-full py-3 bg-gradient-to-r from-blue-600 to-amber-400 text-white font-bold rounded-lg shadow-md hover:scale-105 hover:from-pink-500 hover:to-blue-400 transition-all duration-300 text-lg" disabled={loading}>Đăng nhập {loading ? <span className="animate-spin">...</span> : null}</button>
                 </form>
