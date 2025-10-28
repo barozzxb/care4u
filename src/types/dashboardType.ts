@@ -3,9 +3,7 @@ export interface DashboardStats {
         totalAccounts: number;
         activeAccounts: number;
     };
-    chartData: {
-        
-    };
+    chartData: object;
     recentAccounts: Array<{
         email: string;
         role: string;
