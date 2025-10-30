@@ -1,3 +1,4 @@
+<<<<<<< Updated upstream
 const NavBar = () => {
     return (
         <nav className="sticky top-0 flex items-center justify-center p-4 bg-gray-800 text-white">
@@ -9,6 +10,131 @@ const NavBar = () => {
             </div>
         </nav>
     );
+=======
+"use client";
+import { logout } from "@/services/authService";
+import Image from "next/image";
+import Link from "next/link";
+import { useEffect, useState } from "react";
+import { useRedirect } from "@/hooks/useRedirect";
+import { toast } from "react-toastify";
+
+interface UserDetail {
+  firstname: string;
+  lastname: string;
+  avatar?: string;
+}
+
+const NavBar = () => {
+  const [email, setEmail] = useState<string | null>(null);
+  const [userDetail, setUserDetail] = useState<UserDetail | null>(null);
+  const { redirectByRole } = useRedirect();
+
+  useEffect(() => {
+    const loadUser = () => {
+      setEmail(localStorage.getItem("email"));
+      const user = localStorage.getItem("user");
+      if (user) {
+        const userObj = JSON.parse(user);
+        setUserDetail(userObj);
+      }
+    };
+
+    // Load dữ liệu ban đầu
+    loadUser();
+
+    // Lắng nghe thay đổi từ localStorage (ví dụ sau khi update info)
+    window.addEventListener("storage", loadUser);
+
+    // Cleanup khi unmount
+    return () => window.removeEventListener("storage", loadUser);
+  }, []);
+
+  const handleLogout = async () => {
+    const message = await logout();
+    if (message) {
+      toast.success(message.toString());
+    }
+  };
+
+  const handleRoleRedirect = () => {
+    const role = localStorage.getItem("role");
+    if (role) {
+      redirectByRole(role);
+    }
+  };
+
+  return (
+    <nav className="absolute top-0 flex items-center p-4 bg-transparent text-gray-950 w-full z-index-100">
+      <div className="flex justify-start">
+        <Image
+          src="/CARE4U.png"
+          alt="Description"
+          width={50}
+          height={50}
+          style={{ objectFit: "cover" }}
+        />
+      </div>
+
+      <div className="flex flex-1 justify-center">
+        <div className="flex gap-8 space-x-4">
+          <Link
+            href="/"
+            className="font-bold hover:text-amber-900 transition-all duration-500"
+          >
+            Trang chủ
+          </Link>
+          <Link
+            href="/aboutus"
+            className="font-bold hover:text-amber-900 transition-all duration-500"
+          >
+            Giới thiệu
+          </Link>
+          <Link
+            href="/services"
+            className="font-bold hover:text-amber-900 transition-all duration-500"
+          >
+            Dịch vụ
+          </Link>
+          <Link
+            href="/contact"
+            className="font-bold hover:text-amber-900 transition-all duration-500"
+          >
+            Liên hệ
+          </Link>
+        </div>
+      </div>
+
+      <div className="flex justify-end w-40">
+        {email ? (
+          <div className="flex items-center gap-3">
+            <button
+              onClick={handleRoleRedirect}
+              className="font-bold text-blue-700"
+            >
+              {userDetail?.lastname
+                ? userDetail.lastname
+                : email.substring(0, email.indexOf("@"))}
+            </button>
+            <button
+              onClick={handleLogout}
+              className="px-3 py-1 bg-amber-400 text-white rounded-lg font-semibold hover:bg-amber-600 transition-all duration-300"
+            >
+              Đăng xuất
+            </button>
+          </div>
+        ) : (
+          <a
+            href="/login"
+            className="font-bold hover:text-amber-800 transition-all duration-500"
+          >
+            Đăng nhập
+          </a>
+        )}
+      </div>
+    </nav>
+  );
+>>>>>>> Stashed changes
 };
 
 export default NavBar;
