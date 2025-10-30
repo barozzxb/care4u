@@ -1,10 +1,12 @@
 "use client";
-
+import { logout } from "@/services/authService";
 import Image from "next/image";
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
+import { ChevronDown, User, Settings, LogOut } from "lucide-react";
 
-import { logout } from "@/services/authService";
+import { useRedirect } from "@/hooks/useRedirect";
+import { toast } from "react-toastify";
 
 interface UserDetail {
     firstname: string;
@@ -15,23 +17,73 @@ interface UserDetail {
 const NavBar = () => {
     const [email, setEmail] = useState<string | null>(null);
     const [userDetail, setUserDetail] = useState<UserDetail | null>(null);
-    const [dropdownOpen, setDropdownOpen] = useState(false);
+    const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+    const dropdownRef = useRef<HTMLDivElement>(null);
 
-    useEffect(() => {
+    // ✅ Hàm load user data
+    const loadUserData = () => {
         setEmail(localStorage.getItem('email'));
         const user = localStorage.getItem('user');
         if (user) {
-            const userObj = JSON.parse(user);
-            setUserDetail(userObj);
+            try {
+                const userObj = JSON.parse(user);
+                setUserDetail(userObj);
+            } catch (error) {
+                console.error("Error parsing user data:", error);
+            }
         }
+    };
+
+    useEffect(() => {
+        loadUserData();
+        
+        // ✅ Lắng nghe event userUpdated
+        const handleUserUpdate = () => {
+            loadUserData();
+        };
+        
+        window.addEventListener('userUpdated', handleUserUpdate);
+        
+        // ✅ Click outside để đóng dropdown
+        const handleClickOutside = (event: MouseEvent) => {
+            if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+                setIsDropdownOpen(false);
+            }
+        };
+
+        document.addEventListener('mousedown', handleClickOutside);
+        
+        // Cleanup
+        return () => {
+            window.removeEventListener('userUpdated', handleUserUpdate);
+            document.removeEventListener('mousedown', handleClickOutside);
+        };
     }, []);
 
     const handleLogout = async () => {
-        await logout();
+        const message = await logout();
+        if (message) {
+            toast.success(message.toString());
+        }
+        setIsDropdownOpen(false);
+    };
+
+    const { redirectByRole } = useRedirect();
+
+    const handleRoleRedirect = () => {
+        const role = localStorage.getItem("role");
+        if (role) {
+            redirectByRole(role);
+        }
+        setIsDropdownOpen(false);
+    };
+
+    const toggleDropdown = () => {
+        setIsDropdownOpen(!isDropdownOpen);
     };
 
     return (
-        <nav className="top-0 flex items-center p-2 bg-transparent text-gray-950 w-full z-index-100">
+        <nav className="absolute top-0 flex items-center p-4 bg-transparent text-gray-950 w-full z-50">
             <div className="flex justify-start">
                 <Image src="/CARE4U.png" alt="Description" width="50" height="50" objectFit="cover" />
             </div>
@@ -43,40 +95,68 @@ const NavBar = () => {
                     <Link href="/contact" className="font-bold hover:text-amber-900 transition-all duration-500">Liên hệ</Link>
                 </div>
             </div>
-            <div className="flex justify-end">
+            <div className="flex justify-end w-40">
                 {email ? (
-                    <>
-                        <button
-                            id="dropdownDividerButton"
-                            onClick={() => setDropdownOpen((open) => !open)}
-                            className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
-                            type="button"
+                    <div className="relative" ref={dropdownRef}>
+                        <button 
+                            onClick={toggleDropdown}
+                            className="flex items-center gap-2 px-3 py-2 font-bold text-blue-700 hover:text-blue-900 hover:bg-blue-50 rounded-lg transition-all duration-300"
                         >
-                            {userDetail?.firstname ? userDetail.firstname : email.substring(0, email.indexOf('@'))}
-                            <svg className="w-2.5 h-2.5 ms-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
-                                <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="m1 1 4 4 4-4" />
-                            </svg>
+                            <User size={18} />
+                            <span>
+                                {userDetail?.lastname || userDetail?.firstname || email.substring(0, email.indexOf('@'))}
+                            </span>
+                            <ChevronDown 
+                                size={16} 
+                                className={`transition-transform duration-300 ${isDropdownOpen ? 'rotate-180' : ''}`}
+                            />
                         </button>
 
-                        {dropdownOpen && (
-                            <div
-                                id="dropdownDivider"
-                                className="absolute mt-2 right-0 z-10 bg-white divide-y divide-gray-100 rounded-lg shadow-sm w-44 dark:bg-gray-700 dark:divide-gray-600"
-                            >
-                                <ul className="py-2 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="dropdownDividerButton">
-                                    <li>
-                                        <a href="#" className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Dashboard</a>
-                                    </li>
-                                    <li>
-                                        <a href="#" className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Thông tin</a>
-                                    </li>
-                                </ul>
+                        {/* ✅ Dropdown Menu với Animation */}
+                        {isDropdownOpen && (
+                            <div className="absolute right-0 mt-2 w-64 bg-white rounded-xl shadow-xl border border-gray-200 overflow-hidden z-50 animate-fadeIn">
+                                {/* User Info Header */}
+                                <div className="px-4 py-3 bg-gradient-to-r from-blue-600 to-cyan-400 text-white">
+                                    <p className="font-semibold">
+                                        {userDetail?.firstname && userDetail?.lastname 
+                                            ? `${userDetail.firstname} ${userDetail.lastname}`
+                                            : (userDetail?.lastname || userDetail?.firstname || 'User')}
+                                    </p>
+                                    <p className="text-xs text-blue-100">{email}</p>
+                                </div>
+
+                                {/* Menu Items */}
                                 <div className="py-2">
-                                    <button onClick={handleLogout} className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Đăng xuất</button>
+                                    <button
+                                        onClick={handleRoleRedirect}
+                                        className="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-gray-700 hover:bg-blue-50 transition-colors duration-200"
+                                    >
+                                        <User size={16} className="text-blue-600" />
+                                        <span>Trang cá nhân</span>
+                                    </button>
+                                    <Link
+                                        href="/patient/updateinfo"
+                                        className="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-gray-700 hover:bg-blue-50 transition-colors duration-200"
+                                        onClick={() => setIsDropdownOpen(false)}
+                                    >
+                                        <Settings size={16} className="text-blue-600" />
+                                        <span>Cập nhật thông tin</span>
+                                    </Link>
+                                </div>
+
+                                {/* Logout Button */}
+                                <div className="border-t border-gray-200">
+                                    <button
+                                        onClick={handleLogout}
+                                        className="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-red-600 hover:bg-red-50 transition-colors duration-200"
+                                    >
+                                        <LogOut size={16} />
+                                        <span>Đăng xuất</span>
+                                    </button>
                                 </div>
                             </div>
                         )}
-                    </>
+                    </div>
                 ) : (
                     <a href="/login" className="font-bold hover:text-amber-800 transition-all duration-500">Đăng nhập</a>
                 )}

@@ -3,7 +3,6 @@ import { logout } from "@/services/authService";
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState } from "react";
-
 import { useRedirect } from "@/hooks/useRedirect";
 import { toast } from "react-toastify";
 
