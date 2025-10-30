@@ -121,7 +121,6 @@ const NavBar = () => {
       </div>
     </nav>
   );
->>>>>>> Stashed changes
 };
 
 export default NavBar;
