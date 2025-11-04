@@ -3,20 +3,20 @@
 import React, { useEffect, useState } from 'react';
 import Loading from '@/components/Loading'
 
-// import { useDepartmentLoad } from '@/hooks/useDepartmentLoad';
+import { useDepartmentLoad } from '@/hooks/useDepartmentLoad';
 
 const DepartmentsPage = () => {
 
-    // const { loading, departments } = useDepartmentLoad();
+    const { loading, departments } = useDepartmentLoad();
 
-    // console.log(departments);
+    console.log(departments);
 
     return (
         <div className="flex flex-col  justify-center align-middle p-4 bg-white rounded-lg shadow-md">
             <h1 className="text-2xl font-bold text-center">Các chuyên khoa</h1>
             <p className="text-center mt-2 text-gray-600">Quản lý tất cả các chuyên khoa ở đây.</p>
 
-            {/* {loading ? (
+            {loading ? (
                 <div className="flex items-center justify-center py-8">
                     <Loading />
                 </div>
@@ -67,7 +67,7 @@ const DepartmentsPage = () => {
                         </tbody>
                     </table>
                 </div>
-            )} */}
+            )}
         </div>
     );
 };
