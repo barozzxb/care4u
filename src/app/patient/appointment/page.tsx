@@ -2,30 +2,18 @@
 
 import React, { useState } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
-import { ArrowLeft, User, Clock } from "lucide-react";
+import { ArrowLeft, User, Clock, CheckCircle } from "lucide-react";
 import { motion } from "framer-motion";
 
-/**
- * Dữ liệu giả (mock)
- */
 const mockDoctorsByHospital: Record<string, any[]> = {
   "Bệnh viện Đa khoa Tâm Anh": [
-    {
-      id: 1,
-      name: "TS.BS Nguyễn Văn A",
-      schedule: ["Thứ 2: 8h-12h", "Thứ 4: 14h-18h", "Thứ 6: 8h-12h"],
-    },
+    { id: 1, name: "TS.BS Nguyễn Văn A", schedule: ["Thứ 2: 8h-12h", "Thứ 4: 14h-18h", "Thứ 6: 8h-12h"] },
   ],
   "Bệnh viện FV": [
-    {
-      id: 3,
-      name: "PGS.TS Trần Thị B",
-      schedule: ["Thứ 3: 8h-12h", "Thứ 6: 14h-18h"],
-    },
+    { id: 3, name: "PGS.TS Trần Thị B", schedule: ["Thứ 3: 8h-12h", "Thứ 6: 14h-18h"] },
   ],
 };
 
-// Lịch dự phòng nếu bác sĩ không tìm thấy
 const fallbackSchedule = ["Thứ 2: 9h-10h", "Thứ 3: 10h-11h", "Thứ 5: 14h-15h"];
 
 export default function AppointmentPage() {
@@ -49,16 +37,35 @@ export default function AppointmentPage() {
       return;
     }
 
-    console.log({
-      doctor: doctorName,
-      hospital: hospitalName,
+    // TẠO LỊCH HẸN
+    const appointment = {
+      id: Date.now().toString(),
+      doctorName,
+      hospitalName,
       patientName,
       patientPhone,
       slot: selectedSlot,
-    });
+      date: new Date().toLocaleDateString("vi-VN"),
+      status: "Đã đặt",
+    };
 
-    alert(`Đặt lịch thành công với ${doctorName} — ${selectedSlot}`);
-    router.push("/patient/doctors");
+    // LƯU VÀO LOCALSTORAGE
+    const existingAppointments = JSON.parse(localStorage.getItem("appointments") || "[]");
+    existingAppointments.push(appointment);
+    localStorage.setItem("appointments", JSON.stringify(existingAppointments));
+
+    // HIỂN THỊ THÔNG BÁO THÀNH CÔNG
+    setShowSuccess(true);
+
+    // LÀM TRỐNG FORM
+    setPatientName("");
+    setPatientPhone("");
+    setSelectedSlot("");
+
+    // ẨN THÔNG BÁO SAU 3 GIÂY
+    setTimeout(() => {
+      setShowSuccess(false);
+    }, 3000);
   };
 
   return (
@@ -94,6 +101,24 @@ export default function AppointmentPage() {
           </p>
         )}
       </motion.div>
+
+      {/* THÔNG BÁO THÀNH CÔNG */}
+      {showSuccess && (
+        <motion.div
+          initial={{ opacity: 0, y: -20, scale: 0.9 }}
+          animate={{ opacity: 1, y: 0, scale: 1 }}
+          exit={{ opacity: 0, y: -20 }}
+          className="max-w-3xl mx-auto mb-6 p-4 bg-gradient-to-r from-green-500 to-emerald-500 text-white rounded-xl shadow-lg flex items-center gap-3"
+        >
+          <CheckCircle size={24} />
+          <div>
+            <p className="font-semibold">Đặt lịch thành công!</p>
+            <p className="text-sm opacity-90">
+              Lịch hẹn với <strong>{doctorName}</strong> vào <strong>{selectedSlot}</strong> đã được lưu.
+            </p>
+          </div>
+        </motion.div>
+      )}
 
       {/* Form */}
       <motion.div
@@ -158,7 +183,7 @@ export default function AppointmentPage() {
           whileHover={{ scale: 1.03 }}
           whileTap={{ scale: 0.97 }}
           onClick={handleSubmit}
-          className="w-full mt-4 px-5 py-3 bg-gradient-to-r from-blue-600 to-teal-600 text-white rounded-full font-semibold shadow-lg"
+          className="w-full mt-6 px-5 py-3 bg-gradient-to-r from-blue-600 to-teal-600 text-white rounded-full font-semibold shadow-lg hover:shadow-xl transition-all duration-300"
         >
           Xác nhận đặt lịch
         </motion.button>
