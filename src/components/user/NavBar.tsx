@@ -20,6 +20,7 @@ const NavBar = () => {
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
     const dropdownRef = useRef<HTMLDivElement>(null);
 
+    // ✅ Hàm load user data
     const loadUserData = () => {
         setEmail(localStorage.getItem('email'));
         const user = localStorage.getItem('user');
