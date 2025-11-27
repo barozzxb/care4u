@@ -30,7 +30,6 @@ export default function AppointmentPage() {
   const [patientName, setPatientName] = useState("");
   const [patientPhone, setPatientPhone] = useState("");
   const [selectedSlot, setSelectedSlot] = useState("");
-  const [showSuccess, setShowSuccess] = useState(false); // THÔNG BÁO THÀNH CÔNG
 
   const handleSubmit = () => {
     if (!patientName || !patientPhone || !selectedSlot) {
@@ -179,7 +178,7 @@ export default function AppointmentPage() {
           </div>
         </div>
 
-        {/* NÚT XÁC NHẬN → HIỂN THỊ THÔNG BÁO, KHÔNG CHUYỂN TRANG */}
+        {/* Nút xác nhận */}
         <motion.button
           whileHover={{ scale: 1.03 }}
           whileTap={{ scale: 0.97 }}

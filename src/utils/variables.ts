@@ -1,0 +1,1 @@
+export const IMG_HOST = process.env.NEXT_PUBLIC_HOST_IMG;
