@@ -9,6 +9,10 @@ baseURL: process.env.NEXT_PUBLIC_HOST || "http://localhost:9000",
   withCredentials: true,
 });
 
+export const putFormData = (url: string, formData: FormData) => {
+  return apiClient.put(url, formData);
+};
+
 apiClient.interceptors.request.use(
     (config) => {
         const token = localStorage.getItem("token");

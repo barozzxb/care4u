@@ -5,4 +5,38 @@ export interface Department {
     name: string;
     description?: string;
     createdAt: Timestamp;
-}
+    doctors: Doctor[];
+};
+
+export interface Doctor {
+    id: number;
+    firstname: string;
+    lastname: string;
+    gender: string;
+    address: string;
+    phonenum: string;
+    avatar: string;
+    bio?: string;
+    certification?: string;
+    education?: string;
+    experience?: string;
+    workinghour?: string;
+};
+
+export interface Account {
+    email: string;
+    role: string;
+    status: boolean
+};
+
+export type AdminDTO = {
+  id?: number | string;
+  firstname?: string;
+  lastname?: string;
+  dob?: string;
+  gender?: string;
+  address?: string;
+  phonenum?: string;
+  avatar?: string;
+  email?: string;
+};
