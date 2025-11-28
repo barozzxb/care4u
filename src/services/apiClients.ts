@@ -8,6 +8,10 @@ const apiClient = axios.create({
     },
 });
 
+export const putFormData = (url: string, formData: FormData) => {
+  return apiClient.put(url, formData);
+};
+
 apiClient.interceptors.request.use(
     (config) => {
         const token = localStorage.getItem("token");

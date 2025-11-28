@@ -16,7 +16,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
 
             const token = localStorage.getItem("token");
 
-            if (!token || isTokenExpired(token)) {
+            if (!token) {
+                return;
+            }
+            if (isTokenExpired(token)) {
                 const message = await logout();
                 console.log(message);
                 toast.error("Phiên đăng nhập đã hết hạn. Vui lòng đăng nhập lại.");
