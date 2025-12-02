@@ -6,6 +6,8 @@ import { useEffect, useState } from "react";
 
 import { logout } from "@/services/authService";
 
+import { IMG_HOST } from "@/utils/variables";
+
 interface UserDetail {
     firstname: string;
     lastname: string;
@@ -19,7 +21,7 @@ const NavBar = () => {
 
     useEffect(() => {
         setEmail(localStorage.getItem('email'));
-        const user = localStorage.getItem('user');
+        const user = localStorage.getItem('userDetail');
         if (user) {
             const userObj = JSON.parse(user);
             setUserDetail(userObj);
@@ -49,10 +51,11 @@ const NavBar = () => {
                         <button
                             id="dropdownDividerButton"
                             onClick={() => setDropdownOpen((open) => !open)}
-                            className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+                            className="text-white bg-gray-200 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 text-center inline-flex items-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
                             type="button"
                         >
-                            {userDetail?.firstname ? userDetail.firstname : email.substring(0, email.indexOf('@'))}
+                            <Image src={`${IMG_HOST}${userDetail?.avatar}`} alt="avatar" width={50} height={50}/>
+
                             <svg className="w-2.5 h-2.5 ms-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
                                 <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="m1 1 4 4 4-4" />
                             </svg>
@@ -61,8 +64,11 @@ const NavBar = () => {
                         {dropdownOpen && (
                             <div
                                 id="dropdownDivider"
-                                className="absolute mt-2 right-0 z-10 bg-white divide-y divide-gray-100 rounded-lg shadow-sm w-44 dark:bg-gray-700 dark:divide-gray-600"
+                                className="absolute mt-10 right-0 z-10 bg-white divide-y divide-gray-100 rounded-lg shadow-sm w-44 dark:bg-gray-700 dark:divide-gray-600"
                             >
+                                <div className="py-2">
+                                    <p className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Xin chào {userDetail?.firstname ? userDetail.firstname : email.substring(0, email.indexOf('@'))}</p>
+                                </div>
                                 <ul className="py-2 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="dropdownDividerButton">
                                     <li>
                                         <a href="#" className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Dashboard</a>

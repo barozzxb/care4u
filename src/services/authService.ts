@@ -1,7 +1,7 @@
 import apiClient from "@/services/apiClients";
 import { jwtDecode } from "jwt-decode";
 
-export const login = async (email: string, password: string) => {
+export const login = async (email: string, password: string) => 
   const res = await apiClient.post("/auth/login", { email, password });
   const { status, message, body } = res.data;
 
@@ -14,6 +14,7 @@ export const login = async (email: string, password: string) => {
       localStorage.setItem("email", email);
 
       window.dispatchEvent(new Event("auth-changed"));
+
     }
   }
   return { status, message, body };
@@ -48,3 +49,4 @@ export const register = async (
 };
 
 console.log(apiClient.defaults.baseURL);
+
