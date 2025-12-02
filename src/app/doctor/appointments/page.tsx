@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import axiosClient from "@/utils/axiosClient";
 import axios from "axios";
+import { BsThreeDotsVertical } from "react-icons/bs";
 
 type Appointment = {
   id: number;
@@ -11,10 +12,10 @@ type Appointment = {
   time: string;
   place: string;
   status: "PENDING" | "APPROVED" | "CANCELED" | "COMPLETED";
-  reason?: string;
+  reason?: string; // Backend trả về reason
 };
 
-/* ---------- Modal primitive (không cần lib) ---------- */
+/* ---------- Modal primitive ---------- */
 function Modal({
   open,
   onClose,
@@ -68,7 +69,6 @@ function CreateAppointmentForm({ onCreated }: { onCreated: () => void }) {
     e.preventDefault();
     setError(null);
 
-    // validate sơ bộ
     if (!patientId || !date || !time || !place) {
       setError("Vui lòng nhập đủ Patient ID, Date, Time, Place.");
       return;
@@ -76,14 +76,15 @@ function CreateAppointmentForm({ onCreated }: { onCreated: () => void }) {
 
     setSubmitting(true);
     try {
-      await axiosClient.post("/doctor/appointments", {
+      // FIX 1: Thêm /api/v1
+      await axiosClient.post("/api/v1/doctor/appointments", {
         patientId: Number(patientId),
-        date, // yyyy-MM-dd
-        time, // HH:mm (Next tự trả theo input)
+        date,
+        time,
         place,
-        notes,
+        notes, // Check lại backend xem cần 'notes' hay 'reason'
       });
-      onCreated(); // đóng modal + reload list ở cha
+      onCreated();
     } catch (err: unknown) {
       let msg = "Tạo lịch thất bại";
       if (axios.isAxiosError(err)) {
@@ -166,6 +167,7 @@ function CreateAppointmentForm({ onCreated }: { onCreated: () => void }) {
 }
 
 /* ---------- Trang chính ---------- */
+/* ---------- Trang chính ---------- */
 export default function AppointmentsPage() {
   const [q, setQ] = useState("");
   const [data, setData] = useState<Appointment[]>([]);
@@ -174,11 +176,12 @@ export default function AppointmentsPage() {
 
   const [editOpen, setEditOpen] = useState(false);
   const [editItem, setEditItem] = useState<Appointment | null>(null);
+  const [menuOpenId, setMenuOpenId] = useState<number | null>(null);
 
   const load = async () => {
     setLoading(true);
     try {
-      const res = await axiosClient.get("/doctor/appointments", {
+      const res = await axiosClient.get("/api/v1/doctor/appointments", {
         params: { q },
       });
       const payload = res.data;
@@ -194,11 +197,17 @@ export default function AppointmentsPage() {
   };
 
   useEffect(() => {
-    load();
+    const handler = setTimeout(() => {
+      load();
+    }, 400);
+
+    return () => clearTimeout(handler);
   }, [q]);
 
   const act = async (id: number, action: "APPROVE" | "REJECT" | "DONE") => {
-    await axiosClient.post(`/doctor/appointments/${id}/action`, { action });
+    await axiosClient.post(`/api/v1/doctor/appointments/${id}/action`, {
+      action,
+    });
     setData((prev) =>
       prev.map((a) =>
         a.id === id
@@ -216,28 +225,48 @@ export default function AppointmentsPage() {
     );
   };
 
+  // style chung cho 3 nút
+  const baseActionBtn =
+    "flex-1 rounded-full border px-3 py-1 text-xs md:text-sm transition";
+  const activeActionBtn = "bg-green-700 text-white border-green-700 shadow-sm";
+  const inactiveActionBtn =
+    "bg-white text-gray-700 border-gray-300 hover:bg-gray-50 disabled:opacity-60 disabled:hover:bg-white";
+
+  // style cho status badge
+  const statusClass = (status: Appointment["status"]) => {
+    switch (status) {
+      case "APPROVED":
+        return "border-blue-400 text-blue-500 bg-blue-50";
+      case "CANCELED":
+        return "border-red-400 text-red-500 bg-red-50";
+      case "COMPLETED":
+        return "border-green-400 text-green-600 bg-green-50";
+      default:
+        return "border-gray-300 text-gray-600 bg-gray-50";
+    }
+  };
+
   return (
     <div className="space-y-4">
-      {/* header */}
       <div className="flex items-center justify-between">
         <h2 className="text-lg font-semibold">Appointments</h2>
         <div className="flex items-center gap-2">
           <input
-            className="w-[260px] rounded-lg border px-3 py-2"
+            className="w-[260px] rounded-lg border border-gray-400 px-3 py-2"
             placeholder="Search patient / notes..."
             value={q}
             onChange={(e) => setQ(e.target.value)}
           />
           <button
             onClick={() => setOpen(true)}
-            className="rounded-lg bg-blue-600 px-3 py-2 text-white hover:bg-blue-700"
+            className="rounded-full bg-sky-500 px-4 py-2 text-sm font-semibold
+                       text-white shadow-md hover:bg-sky-600 active:scale-[0.98] transition"
           >
             + New Appointment
           </button>
         </div>
       </div>
 
-      {/* list */}
       {loading ? (
         <div>Loading...</div>
       ) : (
@@ -248,67 +277,114 @@ export default function AppointmentsPage() {
               <th>Time</th>
               <th>Place</th>
               <th>Status</th>
-              <th className="w-72">Actions</th>
+              <th className="w-80">Actions</th>
             </tr>
           </thead>
           <tbody>
-            {(Array.isArray(data) ? data : []).map((a) => (
-              <tr key={a.id} className="border-b">
-                <td className="py-2">{a.patientName}</td>
-                <td>{new Date(a.time).toLocaleString()}</td>
-                <td>{a.place}</td>
-                <td>{a.status}</td>
-                <td className="py-2">
-                  <div className="flex gap-2">
-                    <button
-                      className="rounded-lg border px-3 py-1"
-                      disabled={a.status !== "PENDING"}
-                      onClick={() => act(a.id, "APPROVE")}
+            {(Array.isArray(data) ? data : []).map((a) => {
+              const isApproved = a.status === "APPROVED";
+              const isCanceled = a.status === "CANCELED";
+              const isCompleted = a.status === "COMPLETED";
+
+              return (
+                <tr key={a.id} className="border-b">
+                  <td className="py-2">{a.patientName}</td>
+                  <td>{new Date(a.time).toLocaleString()}</td>
+                  <td>{a.place}</td>
+                  <td>
+                    <span
+                      className={`inline-flex items-center rounded-full px-3 py-1 text-xs font-medium border ${statusClass(
+                        a.status
+                      )}`}
                     >
-                      Approve
-                    </button>
-                    <button
-                      className="rounded-lg border px-3 py-1"
-                      disabled={a.status !== "PENDING"}
-                      onClick={() => act(a.id, "REJECT")}
-                    >
-                      Reject
-                    </button>
-                    <button
-                      className="rounded-lg border px-3 py-1"
-                      disabled={a.status !== "APPROVED"}
-                      onClick={() => act(a.id, "DONE")}
-                    >
-                      Done
-                    </button>
-                    <button
-                      className="rounded-lg border px-3 py-1"
-                      onClick={() => {
-                        setEditItem(a);
-                        setEditOpen(true);
-                      }}
-                    >
-                      Edit
-                    </button>
-                    <button
-                      className="rounded-lg border px-3 py-1 text-red-600 hover:bg-red-100"
-                      onClick={async () => {
-                        if (
-                          confirm("Bạn có chắc muốn xoá cuộc hẹn này không?")
-                        ) {
-                          await axiosClient.delete(
-                            `/doctor/appointments/${a.id}`
-                          );
-                          setData((prev) => prev.filter((x) => x.id !== a.id)); // cập nhật UI nhanh
-                        }
-                      }}
-                    >
-                      Delete
-                    </button>
-                  </div>
-                </td>
-              </tr>
-            ))}
+                      {a.status}
+                    </span>
+                  </td>
+                  <td className="py-2">
+                    <div className="flex items-center gap-2">
+                      {/* group 3 nút hành động */}
+                      <div className="flex flex-1 gap-2">
+                        <button
+                          className={`${baseActionBtn} ${
+                            isApproved ? activeActionBtn : inactiveActionBtn
+                          }`}
+                          disabled={a.status !== "PENDING"}
+                          onClick={() => act(a.id, "APPROVE")}
+                        >
+                          Approve
+                        </button>
+                        <button
+                          className={`${baseActionBtn} ${
+                            isCanceled ? activeActionBtn : inactiveActionBtn
+                          }`}
+                          disabled={a.status !== "PENDING"}
+                          onClick={() => act(a.id, "REJECT")}
+                        >
+                          Reject
+                        </button>
+                        <button
+                          className={`${baseActionBtn} ${
+                            isCompleted ? activeActionBtn : inactiveActionBtn
+                          }`}
+                          disabled={a.status !== "APPROVED"}
+                          onClick={() => act(a.id, "DONE")}
+                        >
+                          Done
+                        </button>
+                      </div>
+
+                      {/* Menu 3 chấm cho Edit / Delete */}
+                      <div className="relative">
+                        <button
+                          onClick={() =>
+                            setMenuOpenId((prev) =>
+                              prev === a.id ? null : a.id
+                            )
+                          }
+                          className="rounded-full border border-gray-300 bg-white p-1.5 hover:bg-gray-50 transition"
+                        >
+                          <BsThreeDotsVertical className="text-gray-600" />
+                        </button>
+
+                        {menuOpenId === a.id && (
+                          <div className="absolute right-0 mt-2 w-32 rounded-lg border bg-white shadow-lg text-sm z-10">
+                            <button
+                              className="block w-full px-3 py-2 text-left hover:bg-gray-100"
+                              onClick={() => {
+                                setEditItem(a);
+                                setEditOpen(true);
+                                setMenuOpenId(null);
+                              }}
+                            >
+                              Edit
+                            </button>
+                            <button
+                              className="block w-full px-3 py-2 text-left text-red-600 hover:bg-red-50"
+                              onClick={async () => {
+                                const ok = confirm(
+                                  "Bạn có chắc muốn xoá cuộc hẹn này không?"
+                                );
+                                if (ok) {
+                                  await axiosClient.delete(
+                                    `/api/v1/doctor/appointments/${a.id}`
+                                  );
+                                  setData((prev) =>
+                                    prev.filter((x) => x.id !== a.id)
+                                  );
+                                }
+                                setMenuOpenId(null);
+                              }}
+                            >
+                              Delete
+                            </button>
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  </td>
+                </tr>
+              );
+            })}
             {data.length === 0 && (
               <tr>
                 <td colSpan={5} className="py-8 text-center text-gray-500">
@@ -320,7 +396,6 @@ export default function AppointmentsPage() {
         </table>
       )}
 
-      {/* Modal tạo lịch */}
       <Modal
         open={open}
         onClose={() => setOpen(false)}
@@ -334,7 +409,6 @@ export default function AppointmentsPage() {
         />
       </Modal>
 
-      {/* Modal chỉnh sửa */}
       <Modal
         open={editOpen}
         onClose={() => setEditOpen(false)}
@@ -355,7 +429,6 @@ export default function AppointmentsPage() {
 }
 
 /* ---------- Form chỉnh sửa ---------- */
-/* ---------- Form chỉnh sửa ---------- */
 function EditAppointmentForm({
   appointment,
   onSaved,
@@ -363,12 +436,22 @@ function EditAppointmentForm({
   appointment: Appointment;
   onSaved: () => void;
 }) {
-  const [date, setDate] = useState(appointment.time.split("T")[0]);
-  const [time, setTime] = useState(
-    new Date(appointment.time).toISOString().substring(11, 16)
-  );
+  const [date, setDate] = useState(() => {
+    // Check an toàn
+    if (!appointment.time) return "";
+    return new Date(appointment.time).toISOString().split("T")[0];
+  });
+
+  const [time, setTime] = useState(() => {
+    // FIX 4: Sửa lỗi Timezone (Tránh convert sang UTC)
+    if (!appointment.time) return "";
+    const d = new Date(appointment.time);
+    // Lấy giờ theo local time (HH:mm)
+    return d.toTimeString().slice(0, 5);
+  });
+
   const [place, setPlace] = useState(appointment.place || "");
-  const [notes, setNotes] = useState(appointment.reason || "");
+  const [notes, setNotes] = useState(appointment.reason || ""); // Lấy từ reason
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -382,7 +465,7 @@ function EditAppointmentForm({
 
     setSaving(true);
     try {
-      await axiosClient.patch(`/doctor/appointments/${appointment.id}`, {
+      await axiosClient.patch(`/api/v1/doctor/appointments/${appointment.id}`, {
         date,
         time,
         place,

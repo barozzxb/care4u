@@ -20,11 +20,5 @@ export default function DoctorLayout({
 }: {
   children: React.ReactNode;
 }) {
-  return (
-    <html lang="en">
-      <body className={`${quicksand.variable} antialiased`}>
-        <DoctorLayoutClient>{children}</DoctorLayoutClient>
-      </body>
-    </html>
-  );
+  return <DoctorLayoutClient>{children}</DoctorLayoutClient>;
 }
