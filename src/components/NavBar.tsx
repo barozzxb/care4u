@@ -1,4 +1,5 @@
 "use client";
+
 import { logout } from "@/services/authService";
 import Image from "next/image";
 import Link from "next/link";
@@ -10,7 +11,7 @@ import { FaStethoscope } from "react-icons/fa";
 interface UserDetail {
   firstname: string;
   lastname: string;
-  avatar: string;
+  avatar?: string;
 }
 
 type NavBarProps = {
@@ -20,6 +21,7 @@ type NavBarProps = {
 const NavBar = ({ className = "" }: NavBarProps) => {
   const [email, setEmail] = useState<string | null>(null);
   const [userDetail, setUserDetail] = useState<UserDetail | null>(null);
+  const { redirectByRole } = useRedirect();
 
   useEffect(() => {
     const loadData = () => {
@@ -30,6 +32,7 @@ const NavBar = ({ className = "" }: NavBarProps) => {
     };
 
     loadData();
+
     window.addEventListener("auth-changed", loadData);
     return () => window.removeEventListener("auth-changed", loadData);
   }, []);
@@ -38,8 +41,6 @@ const NavBar = ({ className = "" }: NavBarProps) => {
     const message = await logout();
     if (message) toast.success(message.toString());
   };
-
-  const { redirectByRole } = useRedirect();
 
   const handleRoleRedirect = () => {
     const role = localStorage.getItem("role");
@@ -85,29 +86,13 @@ const NavBar = ({ className = "" }: NavBarProps) => {
             <Link
               href="/doctor"
               className="relative flex items-center gap-2 px-4 py-2 
-              bg-gradient-to-r 
-              from-blue-500 
-              to-purple-500 
-              text-white 
-              rounded-xl 
-              font-semibold 
-              shadow-md 
-              hover:shadow-lg 
-              hover:scale-[1.03] 
-              transition-all 
-              duration-300
+              bg-gradient-to-r from-blue-500 to-purple-500 
+              text-white rounded-xl font-semibold shadow-md 
+              hover:shadow-lg hover:scale-[1.03] transition-all duration-300
               hover:from-pink-600 hover:to-yellow-500"
             >
               <FaStethoscope className="text-lg" />
               <span>Doctor Workspace</span>
-
-              <span
-                className="absolute -top-1 -right-1 bg-red-500 text-white 
-                     text-xs w-5 h-5 flex items-center justify-center
-                     rounded-full shadow"
-              >
-                3
-              </span>
             </Link>
           )}
 
