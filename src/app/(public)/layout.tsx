@@ -1,4 +1,3 @@
-import type { Metadata } from "next";
 import { Quicksand } from "next/font/google";
 import "../globals.css";
 
@@ -12,28 +11,20 @@ const quicksand = Quicksand({
   weight: ["400", "700"],
 });
 
-export const metadata: Metadata = {
-  title: "Care4U - Sức khỏe và đặt lịch",
-  description: "Nền tảng chăm sóc sức khỏe và đặt lịch hẹn",
-};
-
-export default function RootLayout({
+export default function PublicLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <body className={`h-screen w-full ${quicksand.variable} antialiased`}>
-        <ToastProvider />
+    <div className={`h-screen w-full ${quicksand.variable} antialiased`}>
+      <ToastProvider />
 
-        <header className="relative top-0 left-0 w-full z-50">
-          <NavBar />
-        </header>
-        <main className="">{children}</main>
-        <Footer />
-
-      </body>
-    </html>
+      <header className="relative w-full z-50">
+        <NavBar className="absolute top-0 left-0 bg-transparent" />
+      </header>
+      <main>{children}</main>
+      <Footer />
+    </div>
   );
 }
