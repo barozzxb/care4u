@@ -11,7 +11,8 @@ const nav = [
   { href: "/doctor", label: "Dashboard" },
   { href: "/doctor/appointments", label: "Appointments" },
   { href: "/doctor/records", label: "Medical Record" },
-  { href: "/doctor/prescriptions/new", label: "Prescribe Drugs" },
+  { href: "/doctor/prescriptions", label: "Prescriptions" },
+  { href: "/doctor/prescriptions/new", label: "New Prescription" },
   { href: "/doctor/profile", label: "My Profile" },
 ];
 
