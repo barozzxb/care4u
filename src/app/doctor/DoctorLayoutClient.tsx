@@ -10,7 +10,7 @@ import { IoMenu } from "react-icons/io5";
 const nav = [
   { href: "/doctor", label: "Dashboard" },
   { href: "/doctor/appointments", label: "Appointments" },
-  { href: "/doctor/records/new", label: "Medical Record" },
+  { href: "/doctor/records", label: "Medical Record" },
   { href: "/doctor/prescriptions/new", label: "Prescribe Drugs" },
   { href: "/doctor/profile", label: "My Profile" },
 ];

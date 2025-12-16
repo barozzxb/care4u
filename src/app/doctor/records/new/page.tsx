@@ -3,7 +3,8 @@
 import { FormEvent, useState } from "react";
 import { useRouter } from "next/navigation";
 import { createMedicalRecord } from "@/services/medicalRecordService";
-import { toast } from "react-hot-toast"; // hoặc lib toast m dùng
+import { toast } from "react-hot-toast";
+import axios from "axios";
 
 export default function NewMedicalRecordPage() {
   const router = useRouter();
@@ -51,42 +52,51 @@ export default function NewMedicalRecordPage() {
       await createMedicalRecord({
         patientId: Number(patientId),
 
-        bloodPressureSystolic: bloodPressureSystolic
+        // Sinh hiệu
+        systolicBP: bloodPressureSystolic
           ? Number(bloodPressureSystolic)
           : undefined,
-        bloodPressureDiastolic: bloodPressureDiastolic
+        diastolicBP: bloodPressureDiastolic
           ? Number(bloodPressureDiastolic)
           : undefined,
         temperature: temperature ? Number(temperature) : undefined,
         heartRate: heartRate ? Number(heartRate) : undefined,
         respiratoryRate: respiratoryRate ? Number(respiratoryRate) : undefined,
-        oxygenSaturation: oxygenSaturation
-          ? Number(oxygenSaturation)
-          : undefined,
+        spo2: oxygenSaturation ? Number(oxygenSaturation) : undefined,
 
+        // Thông số cơ thể
         height: height ? Number(height) : undefined,
         weight: weight ? Number(weight) : undefined,
         bmi: bmi ? Number(bmi) : undefined,
 
+        // Khám & chẩn đoán
+        symptoms: symptom,
         physicalExam,
-        symptom,
         diagnosis,
-        clinicalConclusion,
-        treatmentPlan,
+        conclusion: clinicalConclusion,
+        treatment: treatmentPlan,
         advice,
-        note,
+        notes: note,
       });
 
       toast.success("Tạo phiếu khám thành công");
       router.push("/doctor/records"); // trang list record
-    } catch (error: any) {
-      const data = error?.response?.data;
+    } catch (error: unknown) {
+      if (axios.isAxiosError(error)) {
+        const data = error.response?.data as {
+          code?: number;
+          errorCode?: string;
+          message?: string;
+        };
 
-      // match với ErrorCode.PATIENT_NOT_FOUND
-      if (data?.code === 404 || data?.errorCode === "PATIENT_NOT_FOUND") {
-        toast.error("Bệnh nhân không tồn tại");
+        if (data?.code === 404 || data?.errorCode === "PATIENT_NOT_FOUND") {
+          toast.error("Bệnh nhân không tồn tại");
+        } else {
+          toast.error(data?.message || "Có lỗi xảy ra, vui lòng thử lại");
+        }
       } else {
-        toast.error(data?.message || "Có lỗi xảy ra, vui lòng thử lại");
+        // Trường hợp lỗi không phải Axios
+        toast.error("Lỗi không xác định, vui lòng thử lại");
       }
     } finally {
       setLoading(false);
@@ -291,13 +301,16 @@ export default function NewMedicalRecordPage() {
           </div>
         </div>
 
-        <button
-          type="submit"
-          disabled={loading}
-          className="px-4 py-2 rounded bg-blue-600 text-white text-sm disabled:opacity-60"
-        >
-          {loading ? "Đang lưu..." : "Tạo phiếu khám"}
-        </button>
+        <div className="text-right">
+          <button
+            type="submit"
+            disabled={loading}
+            className="rounded-full bg-green-700 px-4 py-2 text-sm font-semibold
+                       text-white shadow-md hover:bg-green-600 active:scale-[0.98] transition"
+          >
+            {loading ? "Đang lưu..." : "Tạo phiếu khám"}
+          </button>
+        </div>
       </form>
     </div>
   );

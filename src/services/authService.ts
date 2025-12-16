@@ -2,7 +2,7 @@ import apiClient from "@/services/apiClients";
 import { jwtDecode } from "jwt-decode";
 
 export const login = async (email: string, password: string) => {
-  const res = await apiClient.post("/auth/login", { email, password });
+  const res = await apiClient.post("/api/v1/auth/login", { email, password });
   const { status, message, body } = res.data;
 
   if (status === 200) {

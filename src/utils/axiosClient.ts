@@ -25,7 +25,7 @@ axiosClient.interceptors.request.use(
 axiosClient.interceptors.response.use(
   (res) => res,
   async (error) => {
-    if (error.response.status === 401) {
+    if (error.response?.status === 401) {
       const res = await apiClient.post("/auth/refresh-token", {
         refreshToken: localStorage.getItem("refreshToken"),
       });
