@@ -5,9 +5,8 @@ export const login = async (email: string, password: string) => {
     const res = await apiClient.post("/auth/login", { email, password });
     const { status, message, body } = res.data;
     if (status === 200) {
-        if (body.token && body.refreshToken) {
+        if (body.token) {
             localStorage.setItem("token", body.token);
-            localStorage.setItem("refreshToken", body.refreshToken);
             localStorage.setItem("userDetail", JSON.stringify(body.user));
             localStorage.setItem("role", body.role);
             localStorage.setItem("email", email);

@@ -43,7 +43,7 @@ const NavBar = () => {
     };
 
     return (
-        <nav className="absolute top-0 flex items-center p-4 bg-transparent text-gray-950 w-full z-index-100">
+        <nav className="sticky top-0 flex items-center p-4 bg-transparent text-gray-950 w-full z-index-50">
             <div className="flex justify-start">
                 <Image src="/CARE4U.png" alt="Description" width="50" height="50" objectFit="cover" />
             </div>
