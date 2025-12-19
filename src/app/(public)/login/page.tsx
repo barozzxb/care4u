@@ -36,8 +36,8 @@ const Login = () => {
                 return;
             }
             toast.success(message || "Đăng nhập thành công!");
-            const role = body.role;
-            redirectByRole(role);
+            window.location.href = "/viewdepartment";
+
         } catch (error) {
             console.error("Login error:", error);
             toast.error("Đăng nhập thất bại. Vui lòng thử lại.");

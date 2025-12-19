@@ -91,12 +91,10 @@ export default function DoctorsPage() {
             >
               <div className="flex flex-col md:flex-row gap-5 items-start">
 
-                {/* Avatar */}
                 <div className="w-20 h-20 rounded-full bg-gradient-to-br from-blue-500 to-teal-500 flex items-center justify-center text-white text-2xl font-semibold">
                   {doctor.firstname ? doctor.firstname[0] : "D"}
                 </div>
 
-                {/* Info */}
                 <div className="flex-1 space-y-2">
                   <h3 className="text-xl font-bold text-gray-800">
                     {doctor.firstname} {doctor.lastname}
@@ -129,15 +127,30 @@ export default function DoctorsPage() {
                   )}
                 </div>
 
-                {/* Buttons */}
                 <div className="flex flex-col gap-2">
-                  <motion.button
-                    whileHover={{ scale: 1.03 }}
-                    whileTap={{ scale: 0.95 }}
-                    className="px-4 py-2 bg-gradient-to-r from-blue-600 to-teal-600 text-white rounded-full text-sm font-medium shadow-md hover:shadow-lg transition"
-                  >
-                    Đặt lịch ngay
-                  </motion.button>
+                <motion.button
+                  onClick={() => {
+                    const token = localStorage.getItem("token");
+                    const role = localStorage.getItem("role");
+
+                    if (!token) {
+                      router.push("/login");
+                      return;
+                    }
+
+                    if (role !== "PATIENT") {
+                      alert("Chỉ bệnh nhân mới được phép đặt lịch hẹn");
+                      return;
+                    }
+
+                    router.push(`/patient/appointment?doctorId=${doctor.id}`);
+                  }}
+                  className="px-4 py-2 bg-gradient-to-r from-blue-600 to-teal-600 text-white rounded-full"
+                >
+                  Đặt lịch ngay
+                </motion.button>
+
+
 
                   <button
                     onClick={() => {

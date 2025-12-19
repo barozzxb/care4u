@@ -3,7 +3,7 @@ import { logout } from "@/services/authService";
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState, useRef } from "react";
-import { ChevronDown, User, FileText, Activity, Calendar, LogOut } from "lucide-react"; // Thêm Calendar
+import { ChevronDown, User, FileText, Activity, Calendar, LogOut } from "lucide-react"; 
 
 import { useRedirect } from "@/hooks/useRedirect";
 import { toast } from "react-toastify";
@@ -20,7 +20,6 @@ const NavBar = () => {
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
     const dropdownRef = useRef<HTMLDivElement>(null);
 
-    // ✅ Hàm load user data
     const loadUserData = () => {
         setEmail(localStorage.getItem('email'));
         const user = localStorage.getItem('user');
@@ -59,12 +58,10 @@ const NavBar = () => {
         setIsDropdownOpen(false);
     };
 
-    // CHUYỂN TRANG KHI CLICK TÊN → /patient/viewdepartment
     const handleNameClick = () => {
         window.location.href = '/patient/viewdepartment';
     };
 
-    // MỞ/TẮT DROPDOWN KHI CLICK MŨI TÊN
     const toggleDropdown = (e: React.MouseEvent) => {
         e.stopPropagation();
         setIsDropdownOpen(prev => !prev);
@@ -88,9 +85,7 @@ const NavBar = () => {
             <div className="flex justify-end w-40">
                 {email ? (
                     <div className="relative" ref={dropdownRef}>
-                        {/* BUTTON: TÊN + MŨI TÊN */}
                         <div className="flex items-center gap-1 px-3 py-2 font-bold text-blue-700 rounded-lg hover:bg-blue-50 transition-all duration-300 cursor-pointer">
-                            {/* TÊN USER → /patient/viewdepartment */}
                             <button
                                 onClick={handleNameClick}
                                 className="flex items-center gap-1.5"
@@ -101,7 +96,6 @@ const NavBar = () => {
                                 </span>
                             </button>
 
-                            {/* MŨI TÊN → MỞ DROPDOWN */}
                             <button
                                 onClick={toggleDropdown}
                                 className="ml-1 p-1 rounded hover:bg-blue-100 transition-colors"
@@ -113,10 +107,8 @@ const NavBar = () => {
                             </button>
                         </div>
 
-                        {/* DROPDOWN MENU */}
                         {isDropdownOpen && (
                             <div className="absolute right-0 mt-2 w-64 bg-white rounded-xl shadow-xl border border-gray-200 overflow-hidden z-50 animate-fadeIn">
-                                {/* Header */}
                                 <div className="px-4 py-3 bg-gradient-to-r from-blue-600 to-cyan-400 text-white">
                                     <p className="font-semibold">
                                         {(userDetail?.firstname && userDetail?.lastname)
@@ -127,7 +119,6 @@ const NavBar = () => {
                                 </div>
 
                                 <div className="py-2">
-                                    {/* TRANG CÁ NHÂN → /patient/updateinfo */}
                                     <Link
                                         href="/patient/updateinfo"
                                         className="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-gray-700 hover:bg-blue-50 transition-colors duration-200"
@@ -137,7 +128,6 @@ const NavBar = () => {
                                         <span>Trang cá nhân</span>
                                     </Link>
 
-                                    {/* View Medical History */}
                                     <Link
                                         href="/patient/medical-history"
                                         className="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-gray-700 hover:bg-blue-50 transition-colors duration-200"
@@ -147,7 +137,6 @@ const NavBar = () => {
                                         <span> Xem hồ sơ y tế</span>
                                     </Link>
 
-                                    {/* Update Measurement */}
                                     <Link
                                         href="/patient/update-measurement"
                                         className="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-gray-700 hover:bg-blue-50 transition-colors duration-200"
@@ -157,9 +146,8 @@ const NavBar = () => {
                                         <span>Cập nhật chỉ số đo</span>
                                     </Link>
 
-                                    {/* XEM LỊCH HẸN → /patient/viewappointments */}
                                     <Link
-                                        href="/patient/viewappointments"
+                                        href="/patient/manageappointment"
                                         className="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-gray-700 hover:bg-blue-50 transition-colors duration-200"
                                         onClick={() => setIsDropdownOpen(false)}
                                     >
@@ -168,7 +156,6 @@ const NavBar = () => {
                                     </Link>
                                 </div>
 
-                                {/* Logout */}
                                 <div className="border-t border-gray-200">
                                     <button
                                         onClick={handleLogout}

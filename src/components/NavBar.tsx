@@ -27,13 +27,10 @@ const NavBar = () => {
       }
     };
 
-    // Load dữ liệu ban đầu
     loadUser();
 
-    // Lắng nghe thay đổi từ localStorage (ví dụ sau khi update info)
     window.addEventListener("storage", loadUser);
 
-    // Cleanup khi unmount
     return () => window.removeEventListener("storage", loadUser);
   }, []);
 
