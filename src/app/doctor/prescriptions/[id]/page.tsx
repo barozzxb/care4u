@@ -34,33 +34,33 @@ export default function PrescriptionDetailPage() {
       .finally(() => setLoading(false));
   }, [id]);
 
-  if (loading) return <div>Loading...</div>;
-  if (!data) return <div>Prescription not found.</div>;
+  if (loading) return <div>Đang tải...</div>;
+  if (!data) return <div>Không tìm thấy đơn thuốc</div>;
 
   return (
     <div className="space-y-4">
       <button onClick={() => router.back()} className="text-sm underline">
-        ← Back
+        ← Quay lại
       </button>
 
       <div className="rounded-xl border p-4 space-y-2">
-        <h2 className="text-lg font-semibold">Prescription #{data.id}</h2>
+        <h2 className="text-lg font-semibold">Đơn thuốc #{data.id}</h2>
 
         <div className="text-sm">
-          <b>Patient:</b> {data.patientName}
+          <b>Bệnh nhân:</b> {data.patientName}
         </div>
 
         <div className="text-sm">
-          <b>Created:</b> {new Date(data.createdAt).toLocaleString("vi-VN")}
+          <b>Ngày tạo:</b> {new Date(data.createdAt).toLocaleString("vi-VN")}
         </div>
       </div>
 
       <div className="rounded-xl border overflow-hidden">
         <div className="grid grid-cols-12 bg-gray-50 px-3 py-2 text-sm font-medium">
-          <div className="col-span-4">Drug</div>
-          <div className="col-span-4">Dose</div>
-          <div className="col-span-2">Qty</div>
-          <div className="col-span-2">Note</div>
+          <div className="col-span-4">Thuốc</div>
+          <div className="col-span-4">Liều dùng</div>
+          <div className="col-span-2">Số lượng</div>
+          <div className="col-span-2">Ghi chú</div>
         </div>
 
         {data.items.map((it) => (

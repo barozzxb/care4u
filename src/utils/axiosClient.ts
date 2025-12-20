@@ -4,9 +4,6 @@ import apiClient from "@/services/apiClients";
 const axiosClient = axios.create({
   baseURL: process.env.NEXT_PUBLIC_API_URL || "http://localhost:9000/",
   withCredentials: false,
-  // headers: {
-  //     "Content-Type": "application/json",
-  // },
 });
 
 axiosClient.interceptors.request.use(

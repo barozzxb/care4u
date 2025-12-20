@@ -60,39 +60,39 @@ export default function PrescriptionListPage() {
   return (
     <div className="space-y-4">
       <div className="flex items-center justify-between gap-3">
-        <h2 className="text-lg font-semibold">Prescriptions</h2>
+        <h2 className="text-lg font-semibold">Danh sách đơn thuốc</h2>
         <Link
           className="rounded-lg border px-3 py-2"
           href="/doctor/prescriptions/new"
         >
-          + New prescription
+          + Tạo đơn thuốc
         </Link>
       </div>
 
       <div className="flex items-center gap-2">
         <input
           className="w-[260px] rounded-lg border border-gray-400 px-3 py-2"
-          placeholder="Filter by patientId (optional)"
+          placeholder="Tìm kiếm"
           value={patientId}
           onChange={(e) => setPatientId(e.target.value)}
         />
         <button className="rounded-lg border px-3 py-2" onClick={load}>
-          Refresh
+          Làm mới
         </button>
       </div>
 
       <div className="rounded-xl border overflow-hidden">
         <div className="grid grid-cols-12 bg-gray-50 px-3 py-2 text-sm font-medium">
           <div className="col-span-2">ID</div>
-          <div className="col-span-4">Patient</div>
-          <div className="col-span-4">Created</div>
-          <div className="col-span-2">Items</div>
+          <div className="col-span-4">Bệnh nhân</div>
+          <div className="col-span-4">Ngày tạo</div>
+          <div className="col-span-2">Số lượng thuốc</div>
         </div>
 
         {loading ? (
-          <div className="px-3 py-4">Loading...</div>
+          <div className="px-3 py-4">Đang tải...</div>
         ) : data.length === 0 ? (
-          <div className="px-3 py-4">No prescriptions.</div>
+          <div className="px-3 py-4">Không có đơn thuốc</div>
         ) : (
           data.map((p) => (
             <div

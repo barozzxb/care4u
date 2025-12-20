@@ -12,10 +12,9 @@ type Appointment = {
   time: string;
   place: string;
   status: "PENDING" | "APPROVED" | "CANCELED" | "COMPLETED";
-  reason?: string; // Backend trả về reason
+  reason?: string;
 };
 
-/* ---------- Modal primitive ---------- */
 function Modal({
   open,
   onClose,
@@ -55,7 +54,6 @@ function Modal({
   );
 }
 
-/* ---------- Form tạo lịch trong modal ---------- */
 function CreateAppointmentForm({ onCreated }: { onCreated: () => void }) {
   const [patientId, setPatientId] = useState("");
   const [date, setDate] = useState("");
@@ -76,13 +74,12 @@ function CreateAppointmentForm({ onCreated }: { onCreated: () => void }) {
 
     setSubmitting(true);
     try {
-      // FIX 1: Thêm /api/v1
       await axiosClient.post("/api/v1/doctor/appointments", {
         patientId: Number(patientId),
         date,
         time,
         place,
-        notes, // Check lại backend xem cần 'notes' hay 'reason'
+        notes,
       });
       onCreated();
     } catch (err: unknown) {
@@ -106,7 +103,7 @@ function CreateAppointmentForm({ onCreated }: { onCreated: () => void }) {
 
       <div className="grid grid-cols-2 gap-3">
         <div className="space-y-1">
-          <label className="text-sm text-gray-600">Patient ID</label>
+          <label className="text-sm text-gray-600">ID Bệnh Nhân</label>
           <input
             className="w-full rounded-lg border px-3 py-2"
             placeholder="e.g. 101"
@@ -115,7 +112,7 @@ function CreateAppointmentForm({ onCreated }: { onCreated: () => void }) {
           />
         </div>
         <div className="space-y-1">
-          <label className="text-sm text-gray-600">Place</label>
+          <label className="text-sm text-gray-600">Địa điểm</label>
           <input
             className="w-full rounded-lg border px-3 py-2"
             placeholder="Clinic Room 2"
@@ -124,7 +121,7 @@ function CreateAppointmentForm({ onCreated }: { onCreated: () => void }) {
           />
         </div>
         <div className="space-y-1">
-          <label className="text-sm text-gray-600">Date</label>
+          <label className="text-sm text-gray-600">Ngày</label>
           <input
             type="date"
             className="w-full rounded-lg border px-3 py-2"
@@ -133,7 +130,7 @@ function CreateAppointmentForm({ onCreated }: { onCreated: () => void }) {
           />
         </div>
         <div className="space-y-1">
-          <label className="text-sm text-gray-600">Time</label>
+          <label className="text-sm text-gray-600">Thời gian</label>
           <input
             type="time"
             className="w-full rounded-lg border px-3 py-2"
@@ -144,7 +141,7 @@ function CreateAppointmentForm({ onCreated }: { onCreated: () => void }) {
       </div>
 
       <div className="space-y-1">
-        <label className="text-sm text-gray-600">Notes</label>
+        <label className="text-sm text-gray-600">Ghi chú</label>
         <input
           className="w-full rounded-lg border px-3 py-2"
           placeholder="Short note (optional)"
@@ -166,8 +163,6 @@ function CreateAppointmentForm({ onCreated }: { onCreated: () => void }) {
   );
 }
 
-/* ---------- Trang chính ---------- */
-/* ---------- Trang chính ---------- */
 export default function AppointmentsPage() {
   const [q, setQ] = useState("");
   const [data, setData] = useState<Appointment[]>([]);
@@ -225,14 +220,12 @@ export default function AppointmentsPage() {
     );
   };
 
-  // style chung cho 3 nút
   const baseActionBtn =
     "flex-1 rounded-full border px-3 py-1 text-xs md:text-sm transition";
   const activeActionBtn = "bg-green-700 text-white border-green-700 shadow-sm";
   const inactiveActionBtn =
     "bg-white text-gray-700 border-gray-300 hover:bg-gray-50 disabled:opacity-60 disabled:hover:bg-white";
 
-  // style cho status badge
   const statusClass = (status: Appointment["status"]) => {
     switch (status) {
       case "APPROVED":
@@ -249,11 +242,11 @@ export default function AppointmentsPage() {
   return (
     <div className="space-y-4">
       <div className="flex items-center justify-between">
-        <h2 className="text-lg font-semibold">Appointments</h2>
+        <h2 className="text-lg font-semibold">Danh sách lịch hẹn</h2>
         <div className="flex items-center gap-2">
           <input
             className="w-[260px] rounded-lg border border-gray-400 px-3 py-2"
-            placeholder="Search patient / notes..."
+            placeholder="Tìm bệnh nhân / ghi chú..."
             value={q}
             onChange={(e) => setQ(e.target.value)}
           />
@@ -262,7 +255,7 @@ export default function AppointmentsPage() {
             className="rounded-full bg-sky-500 px-4 py-2 text-sm font-semibold
                        text-white shadow-md hover:bg-sky-600 active:scale-[0.98] transition"
           >
-            + New Appointment
+            + Tạo lịch hẹn
           </button>
         </div>
       </div>
@@ -273,11 +266,11 @@ export default function AppointmentsPage() {
         <table className="w-full text-sm">
           <thead>
             <tr className="border-b text-left">
-              <th className="py-2">Patient</th>
-              <th>Time</th>
-              <th>Place</th>
-              <th>Status</th>
-              <th className="w-80">Actions</th>
+              <th className="py-2">Bệnh nhân</th>
+              <th>Thời gian</th>
+              <th>Địa điểm</th>
+              <th>Trạng thái</th>
+              <th className="w-80">Thao tác</th>
             </tr>
           </thead>
           <tbody>
@@ -302,7 +295,6 @@ export default function AppointmentsPage() {
                   </td>
                   <td className="py-2">
                     <div className="flex items-center gap-2">
-                      {/* group 3 nút hành động */}
                       <div className="flex flex-1 gap-2">
                         <button
                           className={`${baseActionBtn} ${
@@ -311,7 +303,7 @@ export default function AppointmentsPage() {
                           disabled={a.status !== "PENDING"}
                           onClick={() => act(a.id, "APPROVE")}
                         >
-                          Approve
+                          Xác nhận
                         </button>
                         <button
                           className={`${baseActionBtn} ${
@@ -320,7 +312,7 @@ export default function AppointmentsPage() {
                           disabled={a.status !== "PENDING"}
                           onClick={() => act(a.id, "REJECT")}
                         >
-                          Reject
+                          Từ chối
                         </button>
                         <button
                           className={`${baseActionBtn} ${
@@ -329,11 +321,10 @@ export default function AppointmentsPage() {
                           disabled={a.status !== "APPROVED"}
                           onClick={() => act(a.id, "DONE")}
                         >
-                          Done
+                          Hoàn thành
                         </button>
                       </div>
 
-                      {/* Menu 3 chấm cho Edit / Delete */}
                       <div className="relative">
                         <button
                           onClick={() =>
@@ -356,7 +347,7 @@ export default function AppointmentsPage() {
                                 setMenuOpenId(null);
                               }}
                             >
-                              Edit
+                              Chỉnh sửa
                             </button>
                             <button
                               className="block w-full px-3 py-2 text-left text-red-600 hover:bg-red-50"
@@ -375,7 +366,7 @@ export default function AppointmentsPage() {
                                 setMenuOpenId(null);
                               }}
                             >
-                              Delete
+                              Xoá
                             </button>
                           </div>
                         )}
@@ -388,7 +379,7 @@ export default function AppointmentsPage() {
             {data.length === 0 && (
               <tr>
                 <td colSpan={5} className="py-8 text-center text-gray-500">
-                  No appointments
+                  Không có lịch hẹn
                 </td>
               </tr>
             )}
@@ -396,11 +387,7 @@ export default function AppointmentsPage() {
         </table>
       )}
 
-      <Modal
-        open={open}
-        onClose={() => setOpen(false)}
-        title="Create Appointment"
-      >
+      <Modal open={open} onClose={() => setOpen(false)} title="Tạo lịch hẹn">
         <CreateAppointmentForm
           onCreated={() => {
             setOpen(false);
@@ -412,7 +399,7 @@ export default function AppointmentsPage() {
       <Modal
         open={editOpen}
         onClose={() => setEditOpen(false)}
-        title="Edit Appointment"
+        title="Chỉnh sửa lịch hẹn"
       >
         {editItem && (
           <EditAppointmentForm

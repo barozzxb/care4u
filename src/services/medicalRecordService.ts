@@ -1,5 +1,6 @@
+import { PendingMedicalRecord } from "@/types/medicalRecord";
 import axiosClient from "@/utils/axiosClient";
-
+import api from "./apiClients";
 export interface CreateMedicalRecordPayload {
   patientId: number;
 
@@ -26,3 +27,7 @@ export interface CreateMedicalRecordPayload {
 export const createMedicalRecord = (payload: CreateMedicalRecordPayload) => {
   return axiosClient.post("/api/v1/doctor/medical-records", payload);
 };
+export const getPendingMedicalRecords = () =>
+  api.get<PendingMedicalRecord[]>(
+    "/api/v1/doctor/dashboard/medical-records/pending"
+  );
