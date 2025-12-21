@@ -39,7 +39,7 @@ export default function UpdateMeasurementPage() {
       }
 
       setLoadingData(true);
-      const res = await getPatientMeasure(email);
+      const res = await getPatientMeasure(email); // gọi API GET measurement gần nhất
 
       if (res.success && res.data) {
         const loaded = {
@@ -88,11 +88,11 @@ export default function UpdateMeasurementPage() {
     setLoading(true);
 
     const payload = {
-      heartRate: Number(formData.heartRate),
-      bloodPressure: formData.bloodPressure,
+      heartRate: formData.heartRate ? Number(formData.heartRate) : undefined,
+      bloodPressure: formData.bloodPressure || undefined,
       weight: Number(formData.weight),
       height: Number(formData.height) / 100,
-      temperature: Number(formData.temperature),
+      temperature: formData.temperature ? Number(formData.temperature) : undefined,
     };
 
     const res = await updatePatientMeasure(email, payload);
