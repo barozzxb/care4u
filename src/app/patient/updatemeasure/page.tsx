@@ -39,7 +39,7 @@ export default function UpdateMeasurementPage() {
       }
 
       setLoadingData(true);
-      const res = await getPatientMeasure(email); // gọi API GET measurement gần nhất
+      const res = await getPatientMeasure(email);
 
       if (res.success && res.data) {
         const loaded = {
@@ -65,7 +65,6 @@ export default function UpdateMeasurementPage() {
   };
 
   const handleEdit = () => setIsEditing(true);
-
   const handleCancel = () => {
     setFormData(originalData);
     setIsEditing(false);
@@ -88,11 +87,11 @@ export default function UpdateMeasurementPage() {
     setLoading(true);
 
     const payload = {
-      heartRate: formData.heartRate ? Number(formData.heartRate) : undefined,
-      bloodPressure: formData.bloodPressure || undefined,
+      heartRate: Number(formData.heartRate),
+      bloodPressure: formData.bloodPressure,
       weight: Number(formData.weight),
       height: Number(formData.height) / 100,
-      temperature: formData.temperature ? Number(formData.temperature) : undefined,
+      temperature: Number(formData.temperature),
     };
 
     const res = await updatePatientMeasure(email, payload);
@@ -107,6 +106,14 @@ export default function UpdateMeasurementPage() {
 
     setLoading(false);
   };
+
+  const healthPredictions = predictHealth({
+    weight: Number(formData.weight),
+    height: Number(formData.height) / 100,
+    heartRate: Number(formData.heartRate),
+    bloodPressure: formData.bloodPressure,
+    temperature: Number(formData.temperature),
+  });
 
   if (loadingData) {
     return (
@@ -135,10 +142,7 @@ export default function UpdateMeasurementPage() {
           )}
         </div>
 
-        <form
-          onSubmit={handleSubmit}
-          className="grid md:grid-cols-2 gap-8"
-        >
+        <form onSubmit={handleSubmit} className="grid md:grid-cols-2 gap-8">
           <Input
             label="Nhịp tim (bpm)"
             icon={<HeartPulse className="text-red-500 w-5 h-5" />}
@@ -218,6 +222,18 @@ export default function UpdateMeasurementPage() {
             </div>
           )}
         </form>
+
+        {/* Phần dự đoán sức khỏe */}
+        <div className="mt-10 bg-gray-100 p-6 rounded-xl">
+          <h2 className="text-2xl font-semibold mb-4 text-blue-700">
+            Dự đoán sức khỏe
+          </h2>
+          <ul className="list-disc list-inside space-y-2 text-gray-700">
+            {healthPredictions.map((msg, idx) => (
+              <li key={idx}>{msg}</li>
+            ))}
+          </ul>
+        </div>
       </div>
     </div>
   );
@@ -261,4 +277,56 @@ function Input({
       </div>
     </div>
   );
+}
+
+function predictHealth(data: {
+  weight: number;
+  height: number;
+  heartRate?: number;
+  bloodPressure?: string;
+  temperature?: number;
+}): string[] {
+  const predictions: string[] = [];
+  const { weight, height, heartRate, bloodPressure, temperature } = data;
+
+  if (!weight || !height) return ["Vui lòng nhập chiều cao và cân nặng để dự đoán."];
+
+  const bmi = weight / (height * height);
+  let bmiMsg = `BMI của bạn là ${bmi.toFixed(1)}. `;
+  if (bmi < 18.5) bmiMsg += "Bạn đang thiếu cân. Hãy đảm bảo chế độ ăn đầy đủ dinh dưỡng và tập thể dục đều đặn.";
+  else if (bmi < 25) bmiMsg += "Cân nặng bình thường. Duy trì chế độ ăn và tập luyện để giữ sức khỏe.";
+  else if (bmi < 30) bmiMsg += "Bạn đang thừa cân. Nên giảm lượng calo và tập thể dục thường xuyên.";
+  else bmiMsg += "Bạn bị béo phì. Hãy tham khảo bác sĩ hoặc chuyên gia dinh dưỡng.";
+  predictions.push(bmiMsg);
+
+  if (heartRate) {
+    let hrMsg = `Nhịp tim hiện tại là ${heartRate} bpm. `;
+    if (heartRate < 60) hrMsg += "Nhịp tim thấp, hãy chú ý nghỉ ngơi và theo dõi sức khỏe.";
+    else if (heartRate <= 100) hrMsg += "Nhịp tim bình thường.";
+    else hrMsg += "Nhịp tim cao, nên kiểm tra với bác sĩ nếu tình trạng kéo dài.";
+    predictions.push(hrMsg);
+  }
+
+  if (bloodPressure) {
+    const parts = bloodPressure.split("/").map((p) => parseInt(p.trim()));
+    if (parts.length === 2) {
+      const [sys, dia] = parts;
+      let bpMsg = `Huyết áp: ${sys}/${dia} mmHg. `;
+      if (sys < 90 || dia < 60) bpMsg += "Huyết áp thấp, cần bổ sung nước và nghỉ ngơi.";
+      else if (sys <= 120 && dia <= 80) bpMsg += "Huyết áp bình thường.";
+      else if (sys > 140 || dia > 90) bpMsg += "Huyết áp cao, nên kiểm tra định kỳ.";
+      else bpMsg += "Huyết áp hơi cao/ thấp, theo dõi thường xuyên.";
+      predictions.push(bpMsg);
+    }
+  }
+
+  if (temperature) {
+    let tempMsg = `Nhiệt độ cơ thể: ${temperature.toFixed(1)}°C. `;
+    if (temperature < 36) tempMsg += "Thân nhiệt thấp, giữ ấm cơ thể.";
+    else if (temperature <= 37.5) tempMsg += "Thân nhiệt bình thường.";
+    else tempMsg += "Thân nhiệt cao, có thể đang sốt. Theo dõi hoặc liên hệ bác sĩ nếu cần.";
+    predictions.push(tempMsg);
+  }
+
+  return predictions;
 }
