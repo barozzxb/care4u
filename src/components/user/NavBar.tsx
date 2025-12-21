@@ -2,10 +2,9 @@
 import { logout } from "@/services/authService";
 import Image from "next/image";
 import Link from "next/link";
-import { useEffect, useState, useRef } from "react";
-import { ChevronDown, User, FileText, Activity, Calendar, LogOut } from "lucide-react"; 
+import { useEffect, useState } from "react";
+import { User } from "lucide-react";
 
-import { useRedirect } from "@/hooks/useRedirect";
 import { toast } from "react-toastify";
 
 interface UserDetail {
@@ -17,8 +16,6 @@ interface UserDetail {
 const NavBar = () => {
     const [email, setEmail] = useState<string | null>(null);
     const [userDetail, setUserDetail] = useState<UserDetail | null>(null);
-    const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-    const dropdownRef = useRef<HTMLDivElement>(null);
 
     const loadUserData = () => {
         setEmail(localStorage.getItem('email'));
@@ -39,32 +36,18 @@ const NavBar = () => {
         const handleUserUpdate = () => loadUserData();
         window.addEventListener('userUpdated', handleUserUpdate);
 
-        const handleClickOutside = (event: MouseEvent) => {
-            if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
-                setIsDropdownOpen(false);
-            }
-        };
-        document.addEventListener('mousedown', handleClickOutside);
-
         return () => {
             window.removeEventListener('userUpdated', handleUserUpdate);
-            document.removeEventListener('mousedown', handleClickOutside);
         };
     }, []);
 
     const handleLogout = async () => {
         const message = await logout();
         if (message) toast.success(message.toString());
-        setIsDropdownOpen(false);
     };
 
     const handleNameClick = () => {
         window.location.href = '/patient/viewdepartment';
-    };
-
-    const toggleDropdown = (e: React.MouseEvent) => {
-        e.stopPropagation();
-        setIsDropdownOpen(prev => !prev);
     };
 
     return (
@@ -84,90 +67,15 @@ const NavBar = () => {
 
             <div className="flex justify-end w-40">
                 {email ? (
-                    <div className="relative" ref={dropdownRef}>
-                        <div className="flex items-center gap-1 px-3 py-2 font-bold text-blue-700 rounded-lg hover:bg-blue-50 transition-all duration-300 cursor-pointer">
-                            <button
-                                onClick={handleNameClick}
-                                className="flex items-center gap-1.5"
-                            >
-                                <User size={18} />
-                                <span>
-                                    {userDetail?.lastname || userDetail?.firstname || email.split('@')[0]}
-                                </span>
-                            </button>
-
-                            <button
-                                onClick={toggleDropdown}
-                                className="ml-1 p-1 rounded hover:bg-blue-100 transition-colors"
-                            >
-                                <ChevronDown
-                                    size={16}
-                                    className={`transition-transform duration-300 ${isDropdownOpen ? 'rotate-180' : ''}`}
-                                />
-                            </button>
-                        </div>
-
-                        {isDropdownOpen && (
-                            <div className="absolute right-0 mt-2 w-64 bg-white rounded-xl shadow-xl border border-gray-200 overflow-hidden z-50 animate-fadeIn">
-                                <div className="px-4 py-3 bg-gradient-to-r from-blue-600 to-cyan-400 text-white">
-                                    <p className="font-semibold">
-                                        {(userDetail?.firstname && userDetail?.lastname)
-                                            ? `${userDetail.firstname} ${userDetail.lastname}`
-                                            : (userDetail?.lastname || userDetail?.firstname || 'User')}
-                                    </p>
-                                    <p className="text-xs text-blue-100">{email}</p>
-                                </div>
-
-                                <div className="py-2">
-                                    <Link
-                                        href="/patient/updateinfo"
-                                        className="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-gray-700 hover:bg-blue-50 transition-colors duration-200"
-                                        onClick={() => setIsDropdownOpen(false)}
-                                    >
-                                        <User size={16} className="text-blue-600" />
-                                        <span>Trang cá nhân</span>
-                                    </Link>
-
-                                    <Link
-                                        href="/patient/medical-history"
-                                        className="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-gray-700 hover:bg-blue-50 transition-colors duration-200"
-                                        onClick={() => setIsDropdownOpen(false)}
-                                    >
-                                        <FileText size={16} className="text-green-600" />
-                                        <span> Xem hồ sơ y tế</span>
-                                    </Link>
-
-                                    <Link
-                                        href="/patient/update-measurement"
-                                        className="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-gray-700 hover:bg-blue-50 transition-colors duration-200"
-                                        onClick={() => setIsDropdownOpen(false)}
-                                    >
-                                        <Activity size={16} className="text-purple-600" />
-                                        <span>Cập nhật chỉ số đo</span>
-                                    </Link>
-
-                                    <Link
-                                        href="/patient/manageappointment"
-                                        className="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-gray-700 hover:bg-blue-50 transition-colors duration-200"
-                                        onClick={() => setIsDropdownOpen(false)}
-                                    >
-                                        <Calendar size={16} className="text-teal-600" />
-                                        <span>Xem lịch hẹn</span>
-                                    </Link>
-                                </div>
-
-                                <div className="border-t border-gray-200">
-                                    <button
-                                        onClick={handleLogout}
-                                        className="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-red-600 hover:bg-red-50 transition-colors duration-200"
-                                    >
-                                        <LogOut size={16} />
-                                        <span>Đăng xuất</span>
-                                    </button>
-                                </div>
-                            </div>
-                        )}
-                    </div>
+                    <button
+                        onClick={handleNameClick}
+                        className="flex items-center gap-1.5 px-3 py-2 font-bold text-blue-700 rounded-lg hover:bg-blue-50 transition-all duration-300 cursor-pointer"
+                    >
+                        <User size={18} />
+                        <span>
+                            {userDetail?.lastname || userDetail?.firstname || email.split('@')[0]}
+                        </span>
+                    </button>
                 ) : (
                     <a href="/login" className="font-bold hover:text-amber-800 transition-all duration-500">Đăng nhập</a>
                 )}

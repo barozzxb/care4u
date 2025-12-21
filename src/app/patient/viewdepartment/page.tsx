@@ -86,7 +86,7 @@ export default function DepartmentsGrid() {
                   whileTap={{ scale: 0.98 }}
                   onClick={() =>
                     router.push(
-                      `/viewdepartment/doctors?department=${dept.id}`
+                      `/patient/viewdepartment/doctors?department=${dept.id}`
                     )
                   }
                   className="cursor-pointer bg-white rounded-2xl shadow-lg hover:shadow-2xl transition-all"
