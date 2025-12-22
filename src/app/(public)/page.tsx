@@ -1,6 +1,7 @@
 import ContactSection from "@/components/sections/ContactSection";
 import HeroSection from "@/components/sections/HeroSection";
 import KeyFeatures from "@/components/sections/KeyFeatures";
+import SeePostsPage from "@/components/sections/SeePosts";
 
 
 export default function Home() {
@@ -8,6 +9,7 @@ export default function Home() {
     <div className="w-full flex flex-col items-center justify-items-center min-h-screen">
         <HeroSection />
         <KeyFeatures />
+        <SeePostsPage />
         <ContactSection />
     </div>
   );
