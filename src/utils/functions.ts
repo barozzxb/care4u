@@ -1,6 +1,4 @@
-import { Timestamp } from "next/dist/server/lib/cache-handlers/types";
-
-export function isBlank(str :String) : boolean {
+export function isBlank(str :string) : boolean {
     return !str || str.trim().length === 0
 }
 

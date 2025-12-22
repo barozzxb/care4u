@@ -2,10 +2,11 @@ import axios from "axios";
 import { toast } from "react-toastify";
 
 const apiClient = axios.create({
-    baseURL: process.env.NEXT_PUBLIC_HOST,
-    headers: {
-        "Content-Type": "application/json",
-    },
+baseURL: process.env.NEXT_PUBLIC_HOST || "http://localhost:9000",
+  headers: {
+    "Content-Type": "application/json",
+  },
+  withCredentials: true,
 });
 
 export const putFormData = (url: string, formData: FormData) => {

@@ -1,8 +1,10 @@
-"use client";
+import type { Metadata } from "next";
+import "./globals.css";
 
-import { useRouter, usePathname } from "next/navigation";
-import { useEffect } from "react";
-import { toast } from "react-toastify";
+export const metadata: Metadata = {
+  title: "Care4U - Sức khỏe và đặt lịch",
+  description: "Nền tảng chăm sóc sức khỏe và đặt lịch hẹn",
+};
 
 import { isTokenExpired } from "@/utils/checkToken";
 import { logout } from "@/services/authService";

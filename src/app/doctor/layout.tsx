@@ -1,13 +1,11 @@
 import type { Metadata } from "next";
 import "../globals.css";
-import "./doctor.css"
-
-import SideBar from "@/components/user/SideBar";
-import Footer from "@/components/Footer";
+import "./doctor.css";
+import DoctorLayoutClient from "./DoctorLayoutClient";
 
 export const metadata: Metadata = {
-    title: "Care4U - Trang chủ người dùng",
-    description: "Nền tảng chăm sóc sức khỏe và đặt lịch hẹn",
+  title: "Care4U - Trang chủ bác sĩ",
+  description: "Nền tảng chăm sóc sức khỏe và đặt lịch hẹn",
 };
 
 export default function RootLayout({
