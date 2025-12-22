@@ -3,8 +3,8 @@ import { Post } from "@/types/types";
 import { getEmail } from "@/utils/checkToken";
 
 
-export const fetchPosts = async (page: Number, size: Number) => {
-    const res = await apiClient.get(`/posts?page=${page}&size=${size}&sort=created,desc`);
+export const fetchPosts = async (page: Number, size: Number, sort: string) => {
+    const res = await apiClient.get(`/posts?page=${page}&size=${size}&sort=${sort}`);
     const { status, message, body } = res.data;
     return { status, message, body };
 }

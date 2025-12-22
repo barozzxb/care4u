@@ -115,7 +115,7 @@ const DepartmentsPage = () => {
             <div className='flex flex-4 justify-center items-center my-4'>
                 <button
                     onClick={() => setAddOrEditModal(true)}
-                    className="py-2 px-4 text-sm sm:text-base font-semibold text-white rounded-lg shadow-md bg-gradient-to-r from-blue-600 to-amber-400 transition-all duration-300 hover:scale-[1.05] hover:shadow-lg hover:from-pink-500 hover:to-blue-400 active:scale-95">
+                    className="py-2 px-4 text-sm sm:text-base font-semibold text-white rounded-lg shadow-md bg-linear-to-r from-blue-600 to-amber-400 transition-all duration-300 hover:scale-[1.05] hover:shadow-lg hover:from-pink-500 hover:to-blue-400 active:scale-95">
                     Tạo mới
                 </button>
             </div>

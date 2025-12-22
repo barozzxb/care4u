@@ -49,3 +49,10 @@ export type Post = {
 	image: string;
     account_email: string
 }
+
+export type Prediction = {
+    id?: number;
+    symptoms: string;
+    prediction: string;
+    datetime: string
+}

@@ -1,5 +1,5 @@
 export const Pagination = ({ page, totalPages, onPageChange, limit, onLimitChange, totalItems }: {
-    page: number; totalPages: number; onPageChange: (page: number) => void; limit: number; onLimitChange: (limit: number) => void;totalItems: number
+    page: number; totalPages: number; onPageChange: (page: number) => void; limit?: number; onLimitChange: (limit: number) => void;totalItems?: number
 }) => {
     if (totalPages <= 1) return null;
 

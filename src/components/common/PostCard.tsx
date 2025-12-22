@@ -20,7 +20,7 @@ export default function PostCard({ post }: { post: Post }) {
   }, []);
 
   return (
-    <article className="w-full max-w-4xl bg-white rounded-xl border shadow-sm overflow-hidden">
+    <article className="w-full max-w-4xl bg-white rounded-xl border shadow-sm overflow-hidden hover:shadow-2xl transition">
       <div className="flex items-center gap-3 p-4">
         <div className="h-10 w-10 rounded-full bg-gray-300 flex items-center justify-center font-semibold">
           {post.account_email.charAt(0).toUpperCase()}
@@ -50,7 +50,7 @@ export default function PostCard({ post }: { post: Post }) {
       </div>
       {
         post.image && (
-          <div className="w-full bg-gray-100 flex justify-center">
+          <div className="w-full bg-gray-100 flex justify-center px-2.5">
             <img
               src={`${IMG_HOST}${post.image}`}
               alt={post.title}
