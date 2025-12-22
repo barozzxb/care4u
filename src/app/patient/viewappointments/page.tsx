@@ -25,7 +25,6 @@ export default function ViewAppointmentPage() {
     const data = localStorage.getItem("appointments");
     if (data) {
       const parsed = JSON.parse(data);
-      // Sắp xếp theo ngày đặt (mới nhất trước)
       const sorted = parsed.sort((a: any, b: any) => new Date(b.date).getTime() - new Date(a.date).getTime());
       setAppointments(sorted);
     }
@@ -41,7 +40,6 @@ export default function ViewAppointmentPage() {
     }
   };
 
-  // Loading skeleton
   if (loading) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-cyan-50 pt-20 pb-16 px-4">
@@ -90,7 +88,6 @@ export default function ViewAppointmentPage() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-cyan-50 pt-20 pb-16 px-4 sm:px-6 lg:px-8">
       <div className="max-w-5xl mx-auto">
-        {/* Nút quay lại */}
         <motion.button
           initial={{ opacity: 0, x: -20 }}
           animate={{ opacity: 1, x: 0 }}
@@ -102,7 +99,6 @@ export default function ViewAppointmentPage() {
           Quay lại
         </motion.button>
 
-        {/* Tiêu đề */}
         <motion.div
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -114,7 +110,6 @@ export default function ViewAppointmentPage() {
           <p className="mt-2 text-gray-600">Quản lý và theo dõi các buổi khám đã đặt</p>
         </motion.div>
 
-        {/* Danh sách lịch hẹn */}
         <div className="grid gap-6 md:grid-cols-2">
           {appointments.map((appt, index) => (
             <motion.div
@@ -124,7 +119,6 @@ export default function ViewAppointmentPage() {
               transition={{ delay: index * 0.1 }}
               className="bg-white rounded-2xl shadow-xl overflow-hidden border border-gray-100 hover:shadow-2xl transition-all duration-300 group"
             >
-              {/* Header màu */}
               <div className="bg-gradient-to-r from-blue-600 to-teal-500 p-4 text-white">
                 <h3 className="text-lg font-bold">{appt.doctorName}</h3>
                 <p className="text-xs opacity-90 flex items-center gap-1 mt-1">
@@ -133,7 +127,6 @@ export default function ViewAppointmentPage() {
                 </p>
               </div>
 
-              {/* Nội dung */}
               <div className="p-6 space-y-4">
                 <div className="flex items-center gap-3 text-gray-700">
                   <div className="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center">
@@ -176,7 +169,6 @@ export default function ViewAppointmentPage() {
                 </div>
               </div>
 
-              {/* Nút hủy */}
               <div className="px-6 pb-5">
                 <button
                   onClick={() => handleCancel(appt.id)}
@@ -190,7 +182,6 @@ export default function ViewAppointmentPage() {
           ))}
         </div>
 
-        {/* Nút đặt thêm */}
         <div className="text-center mt-12">
           <motion.button
             whileHover={{ scale: 1.05 }}

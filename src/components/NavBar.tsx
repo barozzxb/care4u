@@ -27,6 +27,11 @@ const NavBar = ({ className = "" }: NavBarProps) => {
     const loadData = () => {
       setEmail(localStorage.getItem("email"));
 
+    loadUser();
+
+    window.addEventListener("storage", loadUser);
+
+    return () => window.removeEventListener("storage", loadUser);
       const user = localStorage.getItem("userDetail");
       if (user) setUserDetail(JSON.parse(user));
     };

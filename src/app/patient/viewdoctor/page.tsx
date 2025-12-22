@@ -81,7 +81,6 @@ export default function DoctorProfilePage() {
     <>
       <div className="min-h-screen bg-gradient-to-b from-blue-50 via-white to-gray-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-          {/* Back Button */}
           <motion.button
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
@@ -92,18 +91,15 @@ export default function DoctorProfilePage() {
             Quay lại danh sách bác sĩ
           </motion.button>
 
-          {/* Main Profile Card */}
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
             className="bg-white rounded-3xl shadow-xl overflow-hidden border border-gray-100"
           >
-            {/* Hero Header */}
             <div className="bg-gradient-to-r from-blue-600 via-blue-700 to-indigo-700 px-8 py-10 text-white relative overflow-hidden">
               <div className="absolute inset-0 bg-black/10"></div>
               <div className="relative z-10 flex flex-col md:flex-row items-start gap-8">
-                {/* Avatar */}
                 <div className="shrink-0">
                   <div className="relative">
                     {doctor.avatar ? (
@@ -123,7 +119,6 @@ export default function DoctorProfilePage() {
                   </div>
                 </div>
 
-                {/* Doctor Info */}
                 <div className="flex-1">
                   <h1 className="text-4xl font-bold mb-3 flex items-center gap-3">
                     <Stethoscope size={36} />
@@ -155,12 +150,9 @@ export default function DoctorProfilePage() {
               </div>
             </div>
 
-            {/* Body Content */}
             <div className="p-8 lg:p-12">
               <div className="grid grid-cols-1 lg:grid-cols-3 gap-10">
-                {/* Left: Detailed Info */}
                 <div className="lg:col-span-2 space-y-8">
-                  {/* Bio */}
                   {doctor.bio && (
                     <motion.div
                       initial={{ opacity: 0 }}
@@ -177,7 +169,6 @@ export default function DoctorProfilePage() {
                     </motion.div>
                   )}
 
-                  {/* Experience */}
                   {doctor.experience && (
                     <div className="bg-gray-50 p-8 rounded-2xl border">
                       <h3 className="text-xl font-bold text-gray-800 mb-4 flex items-center gap-3">
@@ -190,7 +181,6 @@ export default function DoctorProfilePage() {
                     </div>
                   )}
 
-                  {/* Working Hours */}
                   {doctor.workinghour && (
                     <div className="bg-green-50 border border-green-200 p-6 rounded-2xl">
                       <h3 className="text-xl font-bold text-green-800 mb-3 flex items-center gap-3">
@@ -203,9 +193,7 @@ export default function DoctorProfilePage() {
                 
                 </div>
 
-                {/* Right: Contact & Booking */}
                 <div className="space-y-6">
-                  {/* Personal Info Card */}
                   <div className="bg-white border border-gray-200 rounded-2xl p-6 shadow-sm">
                     <h3 className="text-xl font-bold text-gray-800 mb-5 flex items-center gap-3">
                       <User className="text-blue-600" />
@@ -221,7 +209,6 @@ export default function DoctorProfilePage() {
                     </div>
                   </div>
 
-                  {/* Contact Card */}
                   <div className="bg-gradient-to-b from-blue-600 to-indigo-700 text-white rounded-2xl p-6 shadow-lg">
                     <h3 className="text-xl font-bold mb-5 flex items-center gap-3">
                       <Phone className="text-white" />
@@ -242,8 +229,7 @@ export default function DoctorProfilePage() {
                       )}
                     </div>
 
-                    {/* Booking Button */}
-                    <button className className="w-full bg-white text-blue-700 font-bold py-4 rounded-xl hover:bg-gray-100 transition shadow-lg text-lg hover:scale-105 transform">
+]                    <button className className="w-full bg-white text-blue-700 font-bold py-4 rounded-xl hover:bg-gray-100 transition shadow-lg text-lg hover:scale-105 transform">
                       Đặt lịch khám ngay
                     </button>
                   </div>
@@ -257,7 +243,6 @@ export default function DoctorProfilePage() {
   );
 }
 
-// Helper Components
 const InfoRow = ({ icon, label, value }: { icon: any; label: string; value: string }) => (
   <div className="flex items-center gap-4 py-3 border-b border-gray-gray-100 last:border-0">
     <div className="text-gray-500 w-24 text-sm font-medium">{label}:</div>

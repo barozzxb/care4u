@@ -170,7 +170,6 @@ export default function UpdateInfoPage() {
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-cyan-50 py-12 px-4">
       <div className="max-w-6xl mx-auto">
         <div className="bg-white/80 backdrop-blur-lg rounded-3xl shadow-2xl border border-white/30 p-8 md:p-12 transition-all duration-300 hover:shadow-3xl">
-          {/* Header */}
           <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-10">
             <div>
               <h1 className="text-3xl md:text-4xl font-bold bg-gradient-to-r from-blue-600 to-cyan-500 bg-clip-text text-transparent">
@@ -181,7 +180,6 @@ export default function UpdateInfoPage() {
               </p>
             </div>
 
-            {/* Chỉ hiện nút "Chỉnh sửa" khi KHÔNG edit */}
             {!isEditing && (
               <button
                 onClick={handleEdit}
@@ -195,7 +193,6 @@ export default function UpdateInfoPage() {
 
           <form onSubmit={handleSubmit} className="space-y-10">
             <div className="grid lg:grid-cols-2 gap-10">
-              {/* Thông tin hồ sơ */}
               <div className="space-y-6">
                 <h3 className="text-xl font-semibold text-blue-700 flex items-center gap-2">
                   <div className="w-1 h-6 bg-blue-600 rounded-full"></div>
@@ -265,7 +262,6 @@ export default function UpdateInfoPage() {
                 </div>
 
                 <div className="grid grid-cols-2 gap-4">
-                  {/* Email - ĐÃ SỬA: không bị tràn chữ */}
                   <div className="relative group">
                     <Mail className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" size={16} />
                     <div className="w-full pl-10 pr-4 py-3 bg-gradient-to-r from-gray-50 to-gray-100 text-gray-700 rounded-xl font-medium border border-gray-200 overflow-hidden">
@@ -285,7 +281,6 @@ export default function UpdateInfoPage() {
                 </div>
               </div>
 
-              {/* Thông tin bổ sung */}
               <div className="space-y-6">
                 <h3 className="text-xl font-semibold text-blue-700 flex items-center gap-2">
                   <div className="w-1 h-6 bg-cyan-500 rounded-full"></div>
@@ -341,7 +336,6 @@ export default function UpdateInfoPage() {
               </div>
             </div>
 
-            {/* NÚT HỦY + LƯU - CHỈ HIỆN KHI ĐANG CHỈNH SỬA */}
             {isEditing && (
               <div className="flex flex-col sm:flex-row justify-end gap-4 pt-8 border-t border-gray-200 mt-10">
                 <button
@@ -378,7 +372,7 @@ export default function UpdateInfoPage() {
   );
 }
 
-// Reusable Input
+
 const InputField = ({ icon, name, type = "text", placeholder, value, onChange, isEditing, required, displayValue }: any) => {
   if (!isEditing) {
     return (
@@ -409,7 +403,6 @@ const InputField = ({ icon, name, type = "text", placeholder, value, onChange, i
   );
 };
 
-// Reusable Select
 const SelectField = ({ icon, name, value, onChange, isEditing, options }: any) => {
   if (!isEditing) {
     return (
