@@ -16,7 +16,7 @@ const ContactSection = () => {
                     <label htmlFor="message" className="block text-sm font-medium text-gray-700">Message</label>
                     <textarea id="message" rows={4} className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2"></textarea>
                 </div>
-                <button type="submit" className="inline-block px-8 py-4 bg-gradient-to-r from-blue-500 to-amber-400 text-white font-bold rounded-full shadow-lg hover:scale-105 hover:from-pink-500 hover:to-blue-400 transition-all duration-300">Send Message</button>
+                <button type="submit" className="inline-block px-8 py-4 bg-linear-to-r from-blue-500 to-amber-400 text-white font-bold rounded-full shadow-lg hover:scale-105 hover:from-pink-500 hover:to-blue-400 transition-all duration-300">Send Message</button>
             </form>
         </section>
     );

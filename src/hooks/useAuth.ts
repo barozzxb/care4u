@@ -1,7 +1,10 @@
-"use client";
-import { useState, useEffect } from "react";
-import { useRouter } from "next/navigation";
+"use client"
 
+import { useState, useEffect } from 'react';
+import { useRouter} from 'next/navigation';
+
+
+import { logout } from "@/services/authService";
 export function useAuth(protectedRole?: string) {
   const [loading, setLoading] = useState(true);
   const router = useRouter();
