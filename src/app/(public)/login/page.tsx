@@ -36,7 +36,7 @@ const Login = () => {
                 return;
             }
             toast.success(message || "Đăng nhập thành công!");
-            window.location.href = "/viewdepartment";
+            window.location.href = "/patient/viewdepartment";
 
         } catch (error) {
             console.error("Login error:", error);

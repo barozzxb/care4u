@@ -5,8 +5,7 @@ export const getPatientInfo = async (email: string) => {
     const response = await fetch(`${API_BASE_URL}?email=${email}`, {
       method: "GET",
       headers: {
-        "Content-Type": "application/json",
-        "Accept": "application/json",
+        Accept: "application/json",
       },
     });
 
@@ -14,15 +13,6 @@ export const getPatientInfo = async (email: string) => {
       return {
         success: false,
         message: `HTTP Error: ${response.status}`,
-        data: null,
-      };
-    }
-
-    const contentType = response.headers.get("content-type");
-    if (!contentType || !contentType.includes("application/json")) {
-      return {
-        success: false,
-        message: "Server trả về dữ liệu không đúng định dạng",
         data: null,
       };
     }
@@ -46,27 +36,27 @@ export const updatePatientInfo = async (
 ) => {
   try {
     if (avatarFile) {
-      const formDataWithFile = new FormData();
-      formDataWithFile.append("avatar", avatarFile);
-      formDataWithFile.append("firstname", formData.firstname);
-      formDataWithFile.append("lastname", formData.lastname);
-      formDataWithFile.append("phonenum", formData.phone);
-      formDataWithFile.append("dob", formData.dob);
-      formDataWithFile.append("idNumber", formData.idNumber);
-      formDataWithFile.append("gender", formData.gender);
-      formDataWithFile.append("email", formData.email);
-      formDataWithFile.append("insurance", formData.insurance);
-      formDataWithFile.append("province", formData.province);
-      formDataWithFile.append("district", formData.district);
-      formDataWithFile.append("ward", formData.ward);
-      formDataWithFile.append("ethnic", formData.ethnic);
-      formDataWithFile.append("referralCode", formData.referralCode);
+      const fd = new FormData();
+
+      fd.append("avatar", avatarFile);
+      fd.append("firstname", formData.firstname ?? "");
+      fd.append("lastname", formData.lastname ?? "");
+      fd.append("phonenum", formData.phone ?? "");
+      fd.append("dob", formData.dob ?? "");
+      fd.append("idNumber", formData.idNumber ?? "");
+      fd.append("gender", formData.gender ?? "");
+      fd.append("insurance", formData.insurance ?? "");
+      fd.append("province", formData.province ?? "");
+      fd.append("district", formData.district ?? "");
+      fd.append("ward", formData.ward ?? "");
+      fd.append("ethnic", formData.ethnic ?? "");
+      fd.append("referralCode", formData.referralCode ?? "");
 
       const response = await fetch(
         `${API_BASE_URL}/update?email=${formData.email}`,
         {
           method: "PUT",
-          body: formDataWithFile,
+          body: fd,
         }
       );
 
@@ -77,44 +67,22 @@ export const updatePatientInfo = async (
         };
       }
 
-      const contentType = response.headers.get("content-type");
-      if (!contentType || !contentType.includes("application/json")) {
-        return {
-          success: false,
-          message: "Server trả về dữ liệu không đúng định dạng",
-        };
-      }
-
       const result = await response.json();
 
       if (result.success) {
-        const updatedUser = {
-          firstname: formData.firstname,
-          lastname: formData.lastname,
-          avatar: result.avatarUrl || "",
-        };
-        localStorage.setItem("user", JSON.stringify(updatedUser));
+        localStorage.setItem(
+          "user",
+          JSON.stringify({
+            firstname: formData.firstname,
+            lastname: formData.lastname,
+            avatar: result.avatarUrl || "",
+          })
+        );
         window.dispatchEvent(new Event("userUpdated"));
       }
 
       return result;
     }
-
-    const requestBody = {
-      firstname: formData.firstname,
-      lastname: formData.lastname,
-      phonenum: formData.phone,
-      dob: formData.dob,
-      idNumber: formData.idNumber,
-      gender: formData.gender,
-      email: formData.email,
-      insurance: formData.insurance,
-      province: formData.province,
-      district: formData.district,
-      ward: formData.ward,
-      ethnic: formData.ethnic,
-      referralCode: formData.referralCode,
-    };
 
     const response = await fetch(
       `${API_BASE_URL}/update?email=${formData.email}`,
@@ -122,37 +90,44 @@ export const updatePatientInfo = async (
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
-          "Accept": "application/json",
+          Accept: "application/json",
         },
-        body: JSON.stringify(requestBody),
+        body: JSON.stringify({
+          firstname: formData.firstname,
+          lastname: formData.lastname,
+          phonenum: formData.phone,
+          dob: formData.dob,
+          idNumber: formData.idNumber,
+          gender: formData.gender,
+          insurance: formData.insurance,
+          province: formData.province,
+          district: formData.district,
+          ward: formData.ward,
+          ethnic: formData.ethnic,
+          referralCode: formData.referralCode,
+        }),
       }
     );
 
     if (!response.ok) {
-      const errorText = await response.text();
+      const text = await response.text();
       return {
         success: false,
-        message: `HTTP Error: ${response.status} - ${errorText}`,
-      };
-    }
-
-    const contentType = response.headers.get("content-type");
-    if (!contentType || !contentType.includes("application/json")) {
-      return {
-        success: false,
-        message: "Server trả về dữ liệu không đúng định dạng",
+        message: `HTTP Error: ${response.status} - ${text}`,
       };
     }
 
     const result = await response.json();
 
     if (result.success) {
-      const updatedUser = {
-        firstname: formData.firstname,
-        lastname: formData.lastname,
-        avatar: "",
-      };
-      localStorage.setItem("user", JSON.stringify(updatedUser));
+      localStorage.setItem(
+        "user",
+        JSON.stringify({
+          firstname: formData.firstname,
+          lastname: formData.lastname,
+          avatar: "",
+        })
+      );
       window.dispatchEvent(new Event("userUpdated"));
     }
 
@@ -163,7 +138,7 @@ export const updatePatientInfo = async (
       message:
         error instanceof Error
           ? error.message
-          : "Không thể kết nối tới server. Vui lòng kiểm tra lại server backend.",
+          : "Không thể kết nối tới server",
     };
   }
 };
