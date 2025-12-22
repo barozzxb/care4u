@@ -39,3 +39,74 @@ body {
   font-weight: bold;
   color: var(--primary-color);
 }
+
+.editor-btn {
+  padding: 4px 8px;
+  border-radius: 6px;
+  font-weight: 600;
+  font-size: 14px;
+  border: 1px solid #e5e7eb;
+  background: white;
+}
+
+.editor-btn:hover {
+  background: #f3f4f6;
+}
+
+.rich-editor-wrapper {
+  border: 1px solid #e5e7eb;
+  border-radius: 0.75rem;
+  background-color: #ffffff;
+  padding: 0.75rem;
+}
+
+.rich-editor-wrapper .ProseMirror {
+  min-height: 15rem;
+  max-height: 15rem;
+  overflow-y: auto;
+
+  padding: 0.5rem;
+  font-size: 0.95rem;
+  line-height: 1.75;
+  color: #111827;
+  outline: none !important;
+  border: none !important;
+}
+
+.rich-editor-wrapper .ProseMirror:focus {
+  outline: none !important;
+}
+
+.rich-editor-wrapper .ProseMirror p {
+  margin: 0.5rem 0;
+}
+
+.rich-editor-wrapper .ProseMirror strong {
+  font-weight: 600;
+}
+
+.rich-editor-wrapper .ProseMirror em {
+  font-style: italic;
+}
+
+.rich-editor-wrapper .ProseMirror h1,
+.rich-editor-wrapper .ProseMirror h2,
+.rich-editor-wrapper .ProseMirror h3 {
+  font-weight: 600;
+  line-height: 1.4;
+  margin: 0.75rem 0 0.5rem;
+}
+
+.rich-editor-wrapper .ProseMirror ul,
+.rich-editor-wrapper .ProseMirror ol {
+  padding-left: 1.25rem;
+  margin: 0.5rem 0;
+}
+
+.rich-editor-wrapper .ProseMirror p.is-editor-empty:first-child::before {
+  content: "Nhập nội dung bài viết...";
+  color: #9ca3af;
+  float: left;
+  height: 0;
+  pointer-events: none;
+}

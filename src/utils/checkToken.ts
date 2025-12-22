@@ -11,3 +11,16 @@ export const isTokenExpired = (token: string): boolean => {
     return true;
   }
 };
+
+
+export const getEmail = (): String => {
+  try {
+    const token = localStorage.getItem("token");
+    if (!token) return "";
+    const decoded: any = jwtDecode(token);
+    if (!decoded.sub) return "";
+    return decoded.sub;
+  } catch {
+    return "";
+  }
+}

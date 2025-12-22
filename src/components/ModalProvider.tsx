@@ -20,7 +20,7 @@ const ModalProvider = ({ isOpen, title, isLoading, mainAction, mainActionLabel, 
         <div
             onClick={handleBackdropClick}
             className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm">
-            <div className="w-full max-w-md rounded-xl bg-white dark:bg-neutral-900 shadow-xl border border-neutral-200 dark:border-neutral-700 p-5 md:p-6 animate-fadeIn">
+            <div className="w-auto min-w-2xl rounded-xl bg-white dark:bg-neutral-900 shadow-xl border border-neutral-200 dark:border-neutral-700 p-5 md:p-6 animate-fadeIn">
                 {(title) && (
                     <div className="mb-4">
                         {title && (

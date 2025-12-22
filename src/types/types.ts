@@ -1,10 +1,8 @@
-import { Timestamp } from "next/dist/server/lib/cache-handlers/types";
-
 export interface Department {
     id: string;
     name: string;
     description?: string;
-    createdAt: Timestamp;
+    createdAt: string;
     doctors: Doctor[];
 };
 
@@ -40,3 +38,21 @@ export type AdminDTO = {
   avatar?: string;
   email?: string;
 };
+
+export type Post = {
+    id: number;
+	created: string;
+	updated: string;
+	title: string;
+	type: string;
+	content: string;
+	image: string;
+    account_email: string
+}
+
+export type Prediction = {
+    id?: number;
+    symptoms: string;
+    prediction: string;
+    datetime: string
+}
