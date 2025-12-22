@@ -8,11 +8,11 @@ import { useEffect, useState } from "react";
 import { IoMenu } from "react-icons/io5";
 
 const nav = [
-  { href: "/doctor", label: "Dashboard" },
-  { href: "/doctor/appointments", label: "Appointments" },
-  { href: "/doctor/records/new", label: "Medical Record" },
-  { href: "/doctor/prescriptions/new", label: "Prescribe Drugs" },
-  { href: "/doctor/profile", label: "My Profile" },
+  { href: "/doctor", label: "Trang chủ" },
+  { href: "/doctor/appointments", label: "Cuộc hẹn" },
+  { href: "/doctor/records", label: "Hồ sơ bệnh án" },
+  { href: "/doctor/prescriptions", label: "Đơn thuốc" },
+  { href: "/doctor/profile", label: "Hồ sơ cá nhân" },
 ];
 
 export default function DoctorLayoutClient({
@@ -101,7 +101,6 @@ export default function DoctorLayoutClient({
               </p>
             </div>
 
-            {/* nút đóng sidebar */}
             <button
               onClick={() => setIsSidebarOpen(false)}
               aria-label="Ẩn sidebar"
@@ -132,11 +131,9 @@ export default function DoctorLayoutClient({
           </nav>
         </aside>
 
-        {/* NỘI DUNG BÊN PHẢI */}
         <main className="flex-1 px-4 py-6 md:px-8 md:py-4">
           <div className="space-y-4">
             <header className="relative flex items-center justify-center py-2">
-              {/* nút mở sidebar bên trái – chỉ hiện khi sidebar đang đóng */}
               {!isSidebarOpen && (
                 <button
                   onClick={() => setIsSidebarOpen(true)}
@@ -148,7 +145,6 @@ export default function DoctorLayoutClient({
                 </button>
               )}
 
-              {/* TITLE Ở GIỮA */}
               <div className="text-center">
                 <h1 className="text-2xl font-bold tracking-tight">
                   Doctor Workspace
@@ -158,7 +154,6 @@ export default function DoctorLayoutClient({
                 </p>
               </div>
 
-              {/* USER INFO BÊN PHẢI */}
               <div className="absolute right-0 mr-2 flex items-center gap-3">
                 <div className="text-right">
                   <p className="text-sm font-semibold">
@@ -172,7 +167,6 @@ export default function DoctorLayoutClient({
               </div>
             </header>
 
-            {/* Card lớn chứa nội dung page con */}
             <section className="bg-white rounded-2xl shadow-sm border border-slate-100 p-5 md:p-6">
               {children}
             </section>

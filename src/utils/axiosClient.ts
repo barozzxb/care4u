@@ -4,9 +4,6 @@ import apiClient from "@/services/apiClients";
 const axiosClient = axios.create({
   baseURL: process.env.NEXT_PUBLIC_API_URL || "http://localhost:9000/",
   withCredentials: false,
-  // headers: {
-  //     "Content-Type": "application/json",
-  // },
 });
 
 axiosClient.interceptors.request.use(
@@ -25,7 +22,7 @@ axiosClient.interceptors.request.use(
 axiosClient.interceptors.response.use(
   (res) => res,
   async (error) => {
-    if (error.response.status === 401) {
+    if (error.response?.status === 401) {
       const res = await apiClient.post("/auth/refresh-token", {
         refreshToken: localStorage.getItem("refreshToken"),
       });

@@ -1,29 +1,33 @@
+import { PendingMedicalRecord } from "@/types/medicalRecord";
 import axiosClient from "@/utils/axiosClient";
-
+import api from "./apiClients";
 export interface CreateMedicalRecordPayload {
   patientId: number;
 
-  bloodPressureSystolic?: number;
-  bloodPressureDiastolic?: number;
+  systolicBP?: number;
+  diastolicBP?: number;
   temperature?: number;
   heartRate?: number;
   respiratoryRate?: number;
-  oxygenSaturation?: number;
+  spo2?: number;
 
   height?: number;
   weight?: number;
   bmi?: number;
+
+  symptoms?: string;
   physicalExam?: string;
-
-  symptom?: string;
   diagnosis?: string;
-  clinicalConclusion?: string;
-  treatmentPlan?: string;
+  conclusion?: string;
+  treatment?: string;
   advice?: string;
-
-  note?: string;
+  notes?: string;
 }
 
 export const createMedicalRecord = (payload: CreateMedicalRecordPayload) => {
   return axiosClient.post("/api/v1/doctor/medical-records", payload);
 };
+export const getPendingMedicalRecords = () =>
+  api.get<PendingMedicalRecord[]>(
+    "/api/v1/doctor/dashboard/medical-records/pending"
+  );
