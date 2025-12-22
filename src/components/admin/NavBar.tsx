@@ -2,10 +2,9 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 import { logout } from "@/services/authService";
-
 import { IMG_HOST } from "@/utils/variables";
 
 interface UserDetail {
@@ -18,10 +17,39 @@ const NavBar = () => {
     const [email, setEmail] = useState<string | null>(null);
     const [userDetail, setUserDetail] = useState<UserDetail | null>(null);
     const [dropdownOpen, setDropdownOpen] = useState(false);
+    const [mobileOpen, setMobileOpen] = useState(false);
+
+    const profileRef = useRef<HTMLDivElement | null>(null);
 
     useEffect(() => {
-        setEmail(localStorage.getItem('email'));
-        const user = localStorage.getItem('userDetail');
+        function handleClickOutside(e: MouseEvent) {
+            if (!profileRef.current) return;
+            if (e.target instanceof Node && !profileRef.current.contains(e.target)) {
+                setDropdownOpen(false);
+            }
+        }
+
+        function handleKeyDown(e: KeyboardEvent) {
+            if (e.key === "Escape") {
+                setDropdownOpen(false);
+                setMobileOpen(false);
+            }
+        }
+
+        if (dropdownOpen) {
+            document.addEventListener("mousedown", handleClickOutside);
+            document.addEventListener("keydown", handleKeyDown);
+        }
+
+        return () => {
+            document.removeEventListener("mousedown", handleClickOutside);
+            document.removeEventListener("keydown", handleKeyDown);
+        };
+    }, [dropdownOpen]);
+
+    useEffect(() => {
+        setEmail(localStorage.getItem("email"));
+        const user = localStorage.getItem("userDetail");
         if (user) {
             const userObj = JSON.parse(user);
             setUserDetail(userObj);
@@ -33,60 +61,91 @@ const NavBar = () => {
     };
 
     return (
-        <nav className="top-0 flex items-center p-2 bg-transparent text-gray-950 w-full z-index-100">
-            <div className="flex justify-start">
-                <Image src="/CARE4U.png" alt="Description" width="50" height="50" objectFit="cover" />
+        <nav className="w-full flex items-center justify-between p-3 bg-transparent">
+            <div className="flex items-center gap-3">
+                <Image src="/CARE4U.png" alt="Logo" width={50} height={50} />
             </div>
-            <div className="flex flex-1 justify-center">
-                <div className="flex gap-8 space-x-4">
-                    <Link href="/" className="font-bold hover:text-amber-900 transition-all duration-500">Trang chủ</Link>
-                    <Link href="/aboutus" className="font-bold hover:text-amber-900 transition-all duration-500">Giới thiệu</Link>
-                    <Link href="/services" className="font-bold hover:text-amber-900 transition-all duration-500">Dịch vụ</Link>
-                    <Link href="/contact" className="font-bold hover:text-amber-900 transition-all duration-500">Liên hệ</Link>
-                </div>
-            </div>
-            <div className="flex justify-end">
-                {email ? (
-                    <>
-                        <button
-                            id="dropdownDividerButton"
-                            onClick={() => setDropdownOpen((open) => !open)}
-                            className="text-white bg-gray-200 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 text-center inline-flex items-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
-                            type="button"
-                        >
-                            <Image src={`${IMG_HOST}${userDetail?.avatar}`} alt="avatar" width={50} height={50}/>
 
-                            <svg className="w-2.5 h-2.5 ms-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
-                                <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="m1 1 4 4 4-4" />
+            <div className="hidden md:flex gap-8">
+                <Link href="/" className="font-bold hover:text-amber-900 duration-300">Trang chủ</Link>
+                <Link href="/aboutus" className="font-bold hover:text-amber-900 duration-300">Giới thiệu</Link>
+                <Link href="/services" className="font-bold hover:text-amber-900 duration-300">Dịch vụ</Link>
+                <Link href="/contact" className="font-bold hover:text-amber-900 duration-300">Liên hệ</Link>
+            </div>
+
+            <div className="flex items-center gap-2">
+                {email ? (
+                    <div ref={profileRef} className="relative">
+                        <button
+                            onClick={() => setDropdownOpen((open) => !open)}
+                            className="flex items-center gap-2 bg-white border border-gray-200 rounded-full pr-3 pl-1 py-1 shadow-sm transition-all"
+                        >
+                            <Image
+                                src={`${IMG_HOST}${userDetail?.avatar}`}
+                                alt="avatar"
+                                width={40}
+                                height={40}
+                                className="rounded-full object-cover"
+                            />
+                            <svg className="w-4 h-4 text-slate-500" fill="none" viewBox="0 0 10 6">
+                                <path stroke="currentColor" strokeWidth="2" d="m1 1 4 4 4-4" />
                             </svg>
                         </button>
 
                         {dropdownOpen && (
-                            <div
-                                id="dropdownDivider"
-                                className="absolute mt-10 right-0 z-10 bg-white divide-y divide-gray-100 rounded-lg shadow-sm w-44 dark:bg-gray-700 dark:divide-gray-600"
-                            >
-                                <div className="py-2">
-                                    <p className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Xin chào {userDetail?.firstname ? userDetail.firstname : email.substring(0, email.indexOf('@'))}</p>
+                            <div className="absolute right-0 mt-2 bg-white w-48 rounded-xl border border-gray-200 shadow-lg z-20">
+                                <div className="px-4 py-2 bg-blue-50 border-b border-gray-100">
+                                    <p className="text-sm font-semibold text-slate-700">
+                                        Xin chào {userDetail?.firstname ?? email.substring(0, email.indexOf("@"))}
+                                    </p>
                                 </div>
-                                <ul className="py-2 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="dropdownDividerButton">
+
+                                <ul className="py-1 text-sm text-slate-700">
                                     <li>
-                                        <a href="#" className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Dashboard</a>
+                                        <a href="#" className="block px-4 py-2 hover:bg-blue-50">Dashboard</a>
                                     </li>
                                     <li>
-                                        <a href="#" className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Thông tin</a>
+                                        <a href="/admin/info" className="block px-4 py-2 hover:bg-blue-50">
+                                            Thông tin
+                                        </a>
                                     </li>
                                 </ul>
-                                <div className="py-2">
-                                    <button onClick={handleLogout} className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Đăng xuất</button>
+
+                                <div className="border-t border-gray-100">
+                                    <button
+                                        onClick={handleLogout}
+                                        className="w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-50"
+                                    >
+                                        Đăng xuất
+                                    </button>
                                 </div>
                             </div>
                         )}
-                    </>
+                    </div>
                 ) : (
-                    <a href="/login" className="font-bold hover:text-amber-800 transition-all duration-500">Đăng nhập</a>
+                    <a href="/login" className="font-bold hover:text-amber-800 duration-300">Đăng nhập</a>
                 )}
+
+                <button
+                    className="md:hidden ml-3 p-2 rounded-lg border border-gray-300"
+                    onClick={() => setMobileOpen((open) => !open)}
+                >
+                    <svg className="w-6 h-6" fill="none" stroke="currentColor" strokeWidth="2"
+                        viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round"
+                            d="M4 6h16M4 12h16M4 18h16" />
+                    </svg>
+                </button>
             </div>
+
+            {mobileOpen && (
+                <div className="absolute top-16 left-0 w-full bg-white shadow-lg flex flex-col md:hidden p-4 space-y-3 z-20">
+                    <Link href="/" className="font-semibold">Trang chủ</Link>
+                    <Link href="/aboutus" className="font-semibold">Giới thiệu</Link>
+                    <Link href="/services" className="font-semibold">Dịch vụ</Link>
+                    <Link href="/contact" className="font-semibold">Liên hệ</Link>
+                </div>
+            )}
         </nav>
     );
 };
