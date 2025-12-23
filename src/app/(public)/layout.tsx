@@ -1,6 +1,8 @@
 import { Quicksand } from "next/font/google";
 import "../globals.css";
 
+import { Metadata } from "next";
+
 import NavBar from "@/components/NavBar";
 import Footer from "@/components/Footer";
 import ToastProvider from "@/components/ToastProvider";
@@ -10,6 +12,11 @@ const quicksand = Quicksand({
   subsets: ["latin"],
   weight: ["400", "700"],
 });
+
+export const metadata: Metadata = {
+  title: "Care4U - Chăm sóc sức khỏe",
+  description: "Nền tảng chăm sóc sức khỏe và đặt lịch hẹn",
+};
 
 export default function PublicLayout({
   children,

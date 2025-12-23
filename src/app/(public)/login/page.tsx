@@ -22,22 +22,21 @@ const Login = () => {
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         setLoading(true);
-        if (isBlank(email) || isBlank(password))
-        {
+        if (isBlank(email) || isBlank(password)) {
             toast.error("Vui lòng điền tất cả các trường!")
             setLoading(false);
             return;
         }
         try {
-            const {status, message, body } = await login(email, password);
+            const { status, message, body } = await login(email, password);
             if (status !== 200) {
                 toast.error(message);
                 setLoading(false);
                 return;
             }
             toast.success(message || "Đăng nhập thành công!");
-            window.location.href = "/patient/viewdepartment";
-
+            const role = body.role;
+            redirectByRole(role);
         } catch (error) {
             console.error("Login error:", error);
             toast.error("Đăng nhập thất bại. Vui lòng thử lại.");
@@ -61,7 +60,7 @@ const Login = () => {
                         <label htmlFor="email" className="absolute left-3 top-2 text-gray-500 text-sm transition-all peer-focus:-top-3 peer-focus:text-xs peer-focus:text-blue-600 peer-not-placeholder-shown:-top-3 peer-not-placeholder-shown:text-xs bg-white px-1 pointer-events-none">Email <span className="text-red-600">*</span></label>
                     </div>
                     <div className="relative w-full">
-                        <input type={showPassword ? "text" : "password"} id="password" name="password" 
+                        <input type={showPassword ? "text" : "password"} id="password" name="password"
                             value={password} onChange={(e) => setPassword(e.target.value)}
                             className="peer border-2 border-gray-300 rounded-lg w-full px-4 pt-6 pb-2 text-gray-900 focus:outline-none focus:border-blue-500 transition-all" />
                         <div className="absolute right-3 top-5">
@@ -73,7 +72,7 @@ const Login = () => {
                         </div>
                         <label htmlFor="password" className="absolute left-3 top-2 text-gray-500 text-sm transition-all peer-focus:-top-3 peer-focus:text-xs peer-focus:text-blue-600 peer-valid:-top-3 peer-valid:text-xs bg-white px-1 pointer-events-none">Mật khẩu <span className="text-red-600">*</span></label>
                     </div>
-                    <button type="submit" className="w-full py-3 bg-gradient-to-r from-blue-600 to-amber-400 text-white font-bold rounded-lg shadow-md hover:scale-105 hover:from-pink-500 hover:to-blue-400 transition-all duration-300 text-lg" disabled={loading}>Đăng nhập {loading ? <span className="animate-spin">...</span> : null}</button>
+                    <button type="submit" className="w-full py-3 bg-linear-to-r from-blue-600 to-amber-400 text-white font-bold rounded-lg shadow-md hover:scale-105 hover:from-pink-500 hover:to-blue-400 transition-all duration-300 text-lg" disabled={loading}>Đăng nhập {loading ? <span className="animate-spin">...</span> : null}</button>
                 </form>
                 <p className="text-center text-gray-500 text-sm mt-4">Bạn chưa có tài khoản? <a href="/register" className="text-blue-600 hover:underline">Đăng ký</a></p>
             </div>

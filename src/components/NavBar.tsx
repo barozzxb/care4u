@@ -6,7 +6,6 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import { useRedirect } from "@/hooks/useRedirect";
 import { toast } from "react-toastify";
-import { FaStethoscope } from "react-icons/fa";
 
 interface UserDetail {
   firstname: string;
@@ -26,21 +25,11 @@ const NavBar = ({ className = "" }: NavBarProps) => {
   useEffect(() => {
     const loadData = () => {
       setEmail(localStorage.getItem("email"));
-
-    loadUser();
-
-    window.addEventListener("storage", loadUser);
-
-    return () => window.removeEventListener("storage", loadUser);
-      const user = localStorage.getItem("userDetail");
-      if (user) setUserDetail(JSON.parse(user));
-    };
-
     loadData();
 
     window.addEventListener("auth-changed", loadData);
     return () => window.removeEventListener("auth-changed", loadData);
-  }, []);
+}}, []);
 
   const handleLogout = async () => {
     const message = await logout();
@@ -91,13 +80,13 @@ const NavBar = ({ className = "" }: NavBarProps) => {
             <Link
               href="/doctor"
               className="relative flex items-center gap-2 px-4 py-2 
-              bg-gradient-to-r from-blue-500 to-purple-500 
+              bg-linear-to-r from-blue-500 to-purple-500 
               text-white rounded-xl font-semibold shadow-md 
               hover:shadow-lg hover:scale-[1.03] transition-all duration-300
               hover:from-pink-600 hover:to-yellow-500"
             >
-              <FaStethoscope className="text-lg" />
-              <span>Doctor Workspace</span>
+              {/* <FaStethoscope className="text-lg" />
+              <span>Doctor Workspace</span> */}
             </Link>
           )}
 
