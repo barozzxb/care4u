@@ -1,5 +1,5 @@
-import api from "./apiClients";
+import apiClient from "./apiClients";
 import { DoctorDashboardStats } from "@/types/dashboard";
 
 export const getDoctorDashboardStats = () =>
-  api.get<DoctorDashboardStats>("/api/v1/doctor/dashboard/stats");
+  apiClient.get<DoctorDashboardStats>("/doctor/dashboard/stats");

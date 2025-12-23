@@ -24,12 +24,12 @@ export default function DoctorsPage() {
     setLoading(true);
 
     apiClient
-      .get(`/api/departments/${departmentId}/doctors`)
+      .get(`/departments/${departmentId}/doctors`)
       .then((res) => setDoctors(res.data || []))
       .catch((err) => console.error("Error fetching doctors:", err));
 
     apiClient
-      .get(`/api/departments`)
+      .get(`/departments`)
       .then((res) => {
         const dept = res.data.find((d: any) => d.id === departmentId);
         if (dept) setDepartmentName(dept.name);
@@ -97,7 +97,7 @@ export default function DoctorsPage() {
 
                 <div className="flex-1 space-y-2">
                   <h3 className="text-xl font-bold text-gray-800">
-                    {doctor.firstname} {doctor.lastname}
+                    {doctor.lastname} {doctor.firstname}
                   </h3>
 
                   <p className="text-blue-600 font-semibold text-base">

@@ -3,7 +3,7 @@
 import { useAuth } from "@/hooks/useAuth";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import NavBar from "@/components/NavBar";
+import NavBar from "@/components/doctor/DoctorNavBar";
 import { useEffect, useState } from "react";
 import { IoMenu } from "react-icons/io5";
 
@@ -12,6 +12,7 @@ const nav = [
   { href: "/doctor/appointments", label: "Cuộc hẹn" },
   { href: "/doctor/records", label: "Hồ sơ bệnh án" },
   { href: "/doctor/prescriptions", label: "Đơn thuốc" },
+  { href: "/doctor/posts", label: "Tạo bài viết" },
   { href: "/doctor/profile", label: "Hồ sơ cá nhân" },
 ];
 

@@ -90,7 +90,7 @@ export default function PredictionForm() {
     };
 
     return (
-        <div className="flex flex-col space-y-6 max-w-3xl items-center p-6 border shadow-2xl bg-white rounded-2xl">
+        <div className="flex flex-col w-full space-y-6 items-center justify-center p-6 border shadow-2xl bg-white rounded-2xl mt-20">
             <h1 className="text-2xl font-bold">Hệ thống dự đoán bệnh dựa trên các dấu hiệu</h1>
             <p className="italic">Hệ thống đang phát triển dựa trên mô hình Machine Learning, các kết quả có thể sai lệch</p>
 

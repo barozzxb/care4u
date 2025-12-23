@@ -40,7 +40,7 @@ export default function DepartmentsGrid() {
     setPatientName(savedName);
 
     apiClient
-      .get("/api/departments")
+      .get("/departments")
       .then((res) => {
         setDepartments(res.data || []);
       })

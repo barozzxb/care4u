@@ -91,7 +91,7 @@ export default function NewPrescription() {
     try {
       await createPrescription(payload);
       toast.success("Tạo đơn thuốc thành công");
-      router.push("/...");
+      router.push("/doctor/prescriptions");
     } catch (err: unknown) {
       if (axios.isAxiosError<ApiError>(err)) {
         toast.error(err.response?.data?.message ?? "Tạo đơn thuốc thất bại");

@@ -1,11 +1,14 @@
 const API_BASE_URL = "http://localhost:9000/api/v1/patient";
 
+
 export const getPatientInfo = async (email: string) => {
   try {
+    const token = localStorage.getItem("token");
     const response = await fetch(`${API_BASE_URL}?email=${email}`, {
       method: "GET",
       headers: {
         Accept: "application/json",
+        Authorization: `Bearer ${token}`
       },
     });
 
@@ -52,11 +55,15 @@ export const updatePatientInfo = async (
       fd.append("ethnic", formData.ethnic ?? "");
       fd.append("referralCode", formData.referralCode ?? "");
 
+      const token = localStorage.getItem("token");
       const response = await fetch(
         `${API_BASE_URL}/update?email=${formData.email}`,
         {
           method: "PUT",
           body: fd,
+          headers: {
+            Authorization: `Bearer ${token}`
+          },
         }
       );
 
@@ -83,14 +90,14 @@ export const updatePatientInfo = async (
 
       return result;
     }
-
+    const token = localStorage.getItem("token");
     const response = await fetch(
       `${API_BASE_URL}/update?email=${formData.email}`,
       {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
-          Accept: "application/json",
+          Authorization: `Bearer ${token}`
         },
         body: JSON.stringify({
           firstname: formData.firstname,

@@ -13,7 +13,7 @@ export function useRedirect() {
           router.push("/patient");
           break;
         case "DOCTOR":
-          router.push("/");
+          router.push("/doctor");
           break;
         case "ADMIN":
           router.push("/admin");

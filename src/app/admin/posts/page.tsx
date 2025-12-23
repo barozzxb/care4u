@@ -6,7 +6,7 @@ import ModalProvider from '@/components/ModalProvider';
 import { toast } from 'react-toastify';
 
 import { Post } from '@/types/types';
-import { addPost, updatePost, checkPostAuth, fetchPosts } from '@/services/admin/postsManageService';
+import { addPost, updatePost, checkPostAuth, fetchPosts, deletePost } from '@/services/admin/postsManageService';
 
 import RichTextEditor from '@/components/common/RichTextEditor';
 
@@ -15,13 +15,14 @@ import { Pagination } from '@/components/Pagination';
 import { formatTime } from '@/utils/functions';
 
 type PostForm = {
+    id?: number,
     title: string;
     content: string;
     image: File | null;
 };
 
 
-const DepartmentsPage = () => {
+const PostsPage = () => {
 
     const [loading, setLoading] = useState(false);
 
@@ -105,6 +106,20 @@ const DepartmentsPage = () => {
         }
     };
 
+    const handleDelete = async (id: number) => {
+        try {
+            const res = await deletePost(id);
+            if (res.status !== 200) {
+                toast.error(res.message);
+                return;
+            }
+            fetch();
+            toast.success(res.message);
+
+        } catch (error) {
+            console.log(error);
+        }
+    }
 
 
     return (
@@ -158,15 +173,22 @@ const DepartmentsPage = () => {
                                         <div className="inline-flex items-center gap-2">
                                             <button className="inline-flex items-center gap-2 px-3 py-1.5 bg-blue-600 text-white rounded-md text-sm hover:bg-blue-700 transition"
                                                 onClick={() => {
-                                                    setAddOrEditModal(true);
-                                                    setIsEditing(true);
                                                     setSelectedPost(post);
+                                                    setForm({
+                                                        id: post.id,
+                                                        title: post.title ?? "",
+                                                        content: post.content ?? "",
+                                                        image: null,
+                                                    });
+                                                    setIsEditing(true);
+                                                    setAddOrEditModal(true);
                                                 }}
                                                 disabled={!checkPostAuth(post.account_email, post)}>
                                                 <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M11 5h6M11 9h6M11 13h6M11 17h6M5 5h.01M5 9h.01M5 13h.01M5 17h.01" /></svg>
                                                 Edit
                                             </button>
-                                            <button className="inline-flex items-center gap-2 px-3 py-1.5 bg-red-600 text-white rounded-md text-sm hover:bg-red-700 transition">
+                                            <button className="inline-flex items-center gap-2 px-3 py-1.5 bg-red-600 text-white rounded-md text-sm hover:bg-red-700 transition"
+                                                onClick={() => handleDelete(post.id)}>
                                                 <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" /></svg>
                                                 Delete
                                             </button>
@@ -210,11 +232,11 @@ const DepartmentsPage = () => {
                             Chi tiết
                         </label>
                         <RichTextEditor
-                            value={form.content}
+                            value={form.content || ""}
                             onChange={(value) =>
                                 setForm({ ...form, content: value })
                             }
-                            />
+                        />
                     </div>
 
                     <div>
@@ -285,22 +307,24 @@ const DepartmentsPage = () => {
                             </h2>
                         </div>
 
-                        {selectedPost.image && (
-                            <div>
-                                <p className="text-gray-500 text-sm mb-2">Hình ảnh</p>
-                                <img
-                                    src={`${IMG_HOST}${selectedPost.image}`}
-                                    alt="Post image"
-                                    className="w-full max-h-64 object-cover rounded-lg border"
-                                />
-                            </div>
-                        )}
+                        {
+                            selectedPost.image && (
+                                <div className="w-full bg-gray-100 flex justify-center px-2.5">
+                                    <img
+                                        src={`${IMG_HOST}${selectedPost.image}`}
+                                        alt={selectedPost.title}
+                                        className="w-xs h-auto object-contain"
+                                    />
+                                </div>
+                            )
+                        }
 
                         <div>
                             <p className="text-gray-500 text-sm mb-2">Nội dung</p>
-                            <div className="max-h-64 overflow-y-auto border rounded-lg p-4 text-gray-800 leading-relaxed bg-gray-50">
-                                {selectedPost.content}
-                            </div>
+                            <div
+                                className="prose max-w-none"
+                                dangerouslySetInnerHTML={{ __html: selectedPost.content }}
+                            />
                         </div>
                     </div>
                 )}
@@ -311,4 +335,4 @@ const DepartmentsPage = () => {
     );
 };
 
-export default DepartmentsPage;
+export default PostsPage;

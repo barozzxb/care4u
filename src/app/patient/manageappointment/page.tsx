@@ -143,7 +143,7 @@ export default function ManageAppointmentsPage() {
               Vui lòng đặt lịch khám để theo dõi tình trạng sức khỏe
             </p>
             <button
-              onClick={() => (window.location.href = "/patient/doctors")}
+              onClick={() => (window.location.href = "/patient/viewdepartment")}
               className="px-6 py-3 bg-blue-700 text-white font-medium rounded hover:bg-blue-800 transition-colors"
             >
               Đặt lịch khám
@@ -151,7 +151,7 @@ export default function ManageAppointmentsPage() {
           </div>
         ) : (
           <div className="space-y-6">
-            {appointments.map((apt) => {
+            {appointments.map((apt, index) => {
               const status = getStatusStyle(apt.status);
               const Icon = status.icon;
 
@@ -165,8 +165,9 @@ export default function ManageAppointmentsPage() {
                       <div>
                         <div className="flex items-center gap-4">
                           <h3 className="text-lg font-semibold text-gray-900">
-                            Lịch hẹn số {apt.id}
-                          </h3>
+  Lịch hẹn số {index + 1}
+</h3>
+
                           <span
                             className={`inline-flex items-center gap-2 px-4 py-2 text-sm font-medium rounded-full border ${status.border} ${status.bg} ${status.text}`}
                           >

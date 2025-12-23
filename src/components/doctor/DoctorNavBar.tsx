@@ -6,6 +6,7 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import { useRedirect } from "@/hooks/useRedirect";
 import { toast } from "react-toastify";
+import { FaStethoscope } from "react-icons/fa";
 
 interface UserDetail {
   firstname: string;
@@ -25,7 +26,16 @@ const NavBar = ({ className = "" }: NavBarProps) => {
   useEffect(() => {
     const loadData = () => {
       setEmail(localStorage.getItem("email"));
-    }
+      setUserDetail(
+        localStorage.getItem("firstname")
+          ? {
+              firstname: localStorage.getItem("firstname")!,
+              lastname: localStorage.getItem("lastname") || "",
+            }
+          : null
+      );
+    };
+
     loadData();
 
     window.addEventListener("auth-changed", loadData);
@@ -86,8 +96,8 @@ const NavBar = ({ className = "" }: NavBarProps) => {
               hover:shadow-lg hover:scale-[1.03] transition-all duration-300
               hover:from-pink-600 hover:to-yellow-500"
             >
-              {/* <FaStethoscope className="text-lg" />
-              <span>Doctor Workspace</span> */}
+              <FaStethoscope className="text-lg" />
+              <span>Doctor Workspace</span>
             </Link>
           )}
 

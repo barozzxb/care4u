@@ -8,7 +8,7 @@ export const metadata: Metadata = {
     description: "Nền tảng chăm sóc sức khỏe và đặt lịch hẹn",
 };
 
-export default function RootLayout({
+export default function DoctorLayout({
     children,
 }: Readonly<{
     children: React.ReactNode;

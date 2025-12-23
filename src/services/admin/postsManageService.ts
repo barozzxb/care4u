@@ -30,6 +30,13 @@ export const updatePost = async (id: number, formData: FormData) => {
   return { status, message, body };
 };
 
+export const deletePost = async (id: number) => {
+  const res = await apiClient.delete(`/admin/posts/delete/${id}`);
+
+  const { status, message, body } = res.data;
+  return { status, message, body };
+};
+
 export const checkPostAuth = async (email: String, post: Post) => {
     return post.account_email === getEmail()
 }

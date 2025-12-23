@@ -2,11 +2,14 @@ const API_BASE_URL = "http://localhost:9000/api/v1/patient";
 
 export const getPatientMeasure = async (email: string) => {
   try {
+    const token = localStorage.getItem("token");
     const response = await fetch(
       `${API_BASE_URL}/measure?email=${email}`,
       {
         method: "GET",
-        headers: { Accept: "application/json" },
+        headers: { Accept: "application/json",
+          Authorization: `Bearer ${token}`
+         },
       }
     );
 
@@ -38,6 +41,7 @@ export const updatePatientMeasure = async (
   }
 ) => {
   try {
+    const token = localStorage.getItem("token");
     const response = await fetch(
       `${API_BASE_URL}/update-measure?email=${email}`,
       {
@@ -45,6 +49,7 @@ export const updatePatientMeasure = async (
         headers: {
           "Content-Type": "application/json",
           Accept: "application/json",
+          Authorization: `Bearer ${token}`
         },
         body: JSON.stringify(data),
       }

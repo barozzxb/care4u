@@ -1,5 +1,4 @@
-import axiosClient from "@/utils/axiosClient";
-
+import apiClient from "./apiClients";
 export type PrescriptionItemPayload = {
   drugId?: number | null;
   name: string;
@@ -14,12 +13,12 @@ export type CreatePrescriptionPayload = {
 };
 
 export const createPrescription = (payload: CreatePrescriptionPayload) =>
-  axiosClient.post("/api/v1/doctor/prescriptions", payload);
+  apiClient.post("/doctor/prescriptions", payload);
 
 export const listPrescriptions = (patientId?: number) =>
-  axiosClient.get("/api/v1/doctor/prescriptions", {
+  apiClient.get("/doctor/prescriptions", {
     params: patientId ? { patientId } : {},
   });
 
 export const getPrescriptionDetail = (id: number) =>
-  axiosClient.get(`/api/v1/doctor/prescriptions/${id}`);
+  apiClient.get(`/doctor/prescriptions/${id}`);

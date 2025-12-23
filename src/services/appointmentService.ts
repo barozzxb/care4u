@@ -1,5 +1,5 @@
 import { TodayAppointment } from "@/types/appointment";
-import api from "./apiClients";
+import apiClient from "./apiClients";
 
 export const getTodayAppointments = () =>
-  api.get<TodayAppointment[]>("/api/v1/doctor/dashboard/appointments/today");
+  apiClient.get<TodayAppointment[]>("doctor/dashboard/appointments/today");

@@ -80,7 +80,7 @@ const NavBar = () => {
                             onClick={() => setDropdownOpen((open) => !open)}
                             className="flex items-center gap-2 bg-white border border-gray-200 rounded-full pr-3 pl-1 py-1 shadow-sm transition-all"
                         >
-                            <Image
+                            <img
                                 src={`${IMG_HOST}${userDetail?.avatar}`}
                                 alt="avatar"
                                 width={40}

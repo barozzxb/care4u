@@ -1,6 +1,6 @@
 import apiClient from "@/services/apiClients";
 
-const API_BASE = "/api/appointments";
+const API_BASE = "/appointments";
 
 export interface Appointment {
   id: number;
